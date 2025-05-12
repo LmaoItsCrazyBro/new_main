@@ -1570,7 +1570,7 @@
     getgenv().LocalPlayer.OnTeleport:Connect(function(State)
         if (not getgenv().TeleportCheck) and getgenv().queueteleport then
             getgenv().TeleportCheck = true
-            queueteleport("loadstring(game:HttpGet(('https://raw.githubusercontent.com/EnterpriseExperience/MicUpSource/refs/heads/main/retrieve_branch_version.lua')))()")
+            queueteleport("loadstring(game:HttpGet(('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/total_main.lua')))()")
         end
     end)
     wait(0.2)
