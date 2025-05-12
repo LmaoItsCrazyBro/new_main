@@ -6293,7 +6293,7 @@
             getgenv().Jerking = true
             wait(0.1)
             getgenv().JerkAnim = Instance.new("Animation")
-            getgenv().JerkAnim.AnimationId = "rbxassetid://698251653"
+            getgenv().JerkAnim.AnimationId = (getgenv().r15_or_r6(getgenv().Humanoid) == true) and "rbxassetid://698251653" or "rbxassetid://168268306"
             getgenv().Jerk = getgenv().Humanoid:LoadAnimation(getgenv().JerkAnim)
 
             task.spawn(function()
