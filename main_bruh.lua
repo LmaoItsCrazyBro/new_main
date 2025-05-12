@@ -3456,6 +3456,71 @@
 
     wait(0.2)
 
+    getgenv().AntiFlingToggle = Tab2:CreateToggle({
+    Name = "Anti Fling",
+    CurrentValue = false,
+    Flag = "AntiFlingAbsolutelyInsane",
+    Callback = function(EnableAntiFlingScript)
+        if EnableAntiFlingScript then
+            getgenv().antiFlingEnabled = true
+            getgenv().antiFlingThing = nil
+
+            local dudes = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
+            local RunServ = cloneref and cloneref(game:GetService("RunService")) or game:GetService("RunService")
+            local step = RunServ.RenderStepped
+            local me = dudes.LocalPlayer
+
+            local function doAntiFling()
+                if getgenv().antiFlingThing then
+                    getgenv().antiFlingThing:Disconnect()
+                    getgenv().antiFlingThing = nil
+                end
+
+                getgenv().antiFlingThing = step:Connect(function()
+                    if not getgenv().antiFlingEnabled then
+                        if getgenv().antiFlingThing then
+                            getgenv().antiFlingThing:Disconnect()
+                            getgenv().antiFlingThing = nil
+                        end
+                        return
+                    end
+
+                    local body = getgenv().Character or me.Character
+                    local core = getgenv().HumanoidRootPart or body and body:FindFirstChild("HumanoidRootPart")
+                    local mind = getgenv().Humanoid or body and body:FindFirstChildWhichIsA("Humanoid")
+                    if not core or not mind then return end
+
+                    for _, bit in ipairs(core:GetChildren()) do
+                        if bit:IsA("BodyMover") or bit:IsA("VectorForce") or bit:IsA("AlignPosition") or bit:IsA("LinearVelocity") then
+                            bit:Destroy()
+                        end
+                    end
+
+                    if core.Velocity.Magnitude > 150 then
+                        core.Velocity = Vector3.new(0, core.Velocity.Y, 0)
+                    end
+                    if core.RotVelocity.Magnitude > 100 then
+                        core.RotVelocity = Vector3.zero
+                    end
+
+                    if mind.PlatformStand then
+                        mind.PlatformStand = false
+                    end
+                end)
+            end
+
+            doAntiFling()
+        else
+            getgenv().antiFlingEnabled = false
+            getgenv().antiFlingEnabled = false
+            wait(0.2)
+            if getgenv().antiFlingThing then
+                getgenv().antiFlingThing:Disconnect()
+                getgenv().antiFlingThing = nil
+            end
+        end
+    end,})
+
     getgenv().CFrameSpeedSlider = Tab2:CreateSlider({
     Name = "CFrame WalkSpeed Set Speed",
     Range = {1, 25},
