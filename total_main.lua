@@ -11658,7 +11658,7 @@
         wait(0.2)
         getgenv().Rayfield:Destroy()
         wait(0.8)
-        loadstring(game:HttpGet(('https://raw.githubusercontent.com/EnterpriseExperience/MicUpSource/refs/heads/main/retrieve_branch_version.lua')))()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/total_main.lua')))()
     end,})
 
     getgenv().DestroyGUIScript = Tab15:CreateButton({
