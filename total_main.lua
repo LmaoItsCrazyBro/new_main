@@ -3531,6 +3531,7 @@
 
             local Players = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
             local LocalPlayer = Players.LocalPlayer
+
             repeat task.wait() until LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 
             local HRP = LocalPlayer.Character:WaitForChild("HumanoidRootPart")
@@ -3543,8 +3544,15 @@
                         continue
                     end
 
-                    if (HRP.CFrame.Position - lastCFrame.Position).Magnitude > 5 then
-                        warn("[AntiTeleport] Unauthorized CFrame movement detected. Reverting...")
+                    local current = HRP.CFrame
+
+                    local posDiff = (current.Position - lastCFrame.Position).Magnitude
+
+                    local rotDiff = (current.LookVector - lastCFrame.LookVector).Magnitude +
+                                    (current.UpVector - lastCFrame.UpVector).Magnitude
+
+                    if posDiff > 5 or rotDiff > 0.1 then
+                        warn("[AntiTeleport] Unauthorized CFrame/Position movement detected. Reverting...")
                         HRP.CFrame = lastCFrame
                     else
                         lastCFrame = HRP.CFrame
