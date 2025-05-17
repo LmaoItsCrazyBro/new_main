@@ -5464,19 +5464,17 @@
     getgenv().Whitelists = {
         ["L0CKED_1N1"] = true,
         ["CHEATING_B0SS"] = true,
-        ["Chick7nn"] = true,
-        ["Nearoux"] = true,
-        ["Ferdinand273738"] = true,
-        ["lerks_alt"] = true,
-        ["2x2x2x2x2x2841"] = true,
     }
 
     getgenv().TextChatService.MessageReceived:Connect(function(message)
         if not message.TextSource then
             warn("No message.TextSource located. [This check is here to prevent an error].")
         else
+            if not message.TextSource.Name then return end
             local sender = message.TextSource.Name
+            if not sender then warn("No sender Name found.") end
             local text = message.Text
+            if not text then warn("No message Text found.")
 
             if text == "?cmds" and getgenv().Whitelists[sender] then
                 getgenv().AdminCommands["cmds"]()
@@ -5492,8 +5490,12 @@
                 return 
             end
             wait()
+            if not message.TextSource.Name then return end
             local sender = message.TextSource.Name
+            if not sender then return end
+            if not message.Text then return end
             local text = message.Text
+            if not text then return end
 
             local senderPlayer = game.Players:FindFirstChild(sender)
             if not senderPlayer then return end
@@ -5505,6 +5507,7 @@
                 local extraArg = args[3]
 
                 local targetPlayer = game.Players:FindFirstChild(targetName)
+                if not targetPlayer then return warn("targetPlayer was not found.")
 
                 if getgenv().AdminCommands[command] then
                     if targetPlayer then
