@@ -3521,6 +3521,106 @@
         end
     end,})
 
+    getgenv().AntiBlur_Univ = Tab16:CreateToggle({
+    Name = "Anti Teleport",
+    CurrentValue = false,
+    Flag = "AntiTeleportToggleUniversal",
+    Callback = function(anti_teleport_toggle)
+        if anti_teleport_toggle then
+            getgenv().AntiTeleport = true
+
+            local Players = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
+            local LocalPlayer = Players.LocalPlayer
+            repeat task.wait() until LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+            local HRP = LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+            local lastCFrame = HRP.CFrame
+
+            task.spawn(function()
+                while task.wait(0.05) do
+                    if not getgenv().AntiTeleport then
+                        lastCFrame = HRP.CFrame
+                        continue
+                    end
+
+                    if (HRP.CFrame.Position - lastCFrame.Position).Magnitude > 5 then
+                        warn("[AntiTeleport] Unauthorized CFrame movement detected. Reverting...")
+                        HRP.CFrame = lastCFrame
+                    else
+                        lastCFrame = HRP.CFrame
+                    end
+                end
+            end)
+        else
+            getgenv().AntiTeleport = false
+            getgenv().AntiTeleport = false
+        end
+    end,})
+
+    getgenv().AntiBlurUniversal = Tab16:CreateToggle({
+    Name = "Anti Blur",
+    CurrentValue = false,
+    Flag = "AntiBlurUniversalToggle",
+    Callback = function(anti_blur_toggle)
+        if anti_blur_toggle then
+            if getgenv().AntiBlurConnection then
+                getgenv().AntiBlurConnection:Disconnect()
+            end
+
+            local Workspace = cloneref and cloneref(game:GetService("Workspace")) or game:GetService("Workspace")
+            local Players = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
+            local Camera = getgenv().Camera or Workspace.CurrentCamera
+
+            getgenv().AntiBlurEnabled = true
+            getgenv().AntiBlurConnection = nil
+
+            local function RemoveBlurEffects(cam)
+                for _, child in ipairs(cam:GetChildren()) do
+                    if child:IsA("BlurEffect") then
+                        child:Destroy()
+                    end
+                end
+            end
+
+            local function SetupBlurWatcher()
+                if getgenv().AntiBlurConnection then
+                    getgenv().AntiBlurConnection:Disconnect()
+                end
+
+                if not getgenv().AntiBlurEnabled then return end
+                RemoveBlurEffects(Camera)
+
+                getgenv().AntiBlurConnection = Camera.ChildAdded:Connect(function(child)
+                    if getgenv().AntiBlurEnabled and child:IsA("BlurEffect") then
+                        task.wait() -- slight delay in case it's added async
+                        if child and child.Parent == Camera then
+                            child:Destroy()
+                        end
+                    end
+                end)
+            end
+
+            Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+                Camera = workspace.CurrentCamera
+                SetupBlurWatcher()
+            end)
+
+            SetupBlurWatcher()
+
+            getgenv().ToggleAntiBlur = function(state)
+                getgenv().AntiBlurEnabled = (state ~= false) -- default true
+                SetupBlurWatcher()
+            end
+        else
+            getgenv().AntiBlurEnabled = false
+            getgenv().AntiBlurEnabled = false
+            if getgenv().AntiBlurConnection then
+                getgenv().AntiBlurConnection:Disconnect()
+                getgenv().AntiBlurConnection = nil
+            end
+        end
+    end,})
+
     getgenv().CFrameSpeedSlider = Tab2:CreateSlider({
     Name = "CFrame WalkSpeed Set Speed",
     Range = {1, 25},
