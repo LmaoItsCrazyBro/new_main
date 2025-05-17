@@ -1,6 +1,6 @@
 getgenv().AntiTeleport = true
 
-local Players = game:GetService("Players")
+local Players = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 repeat task.wait() until LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 
