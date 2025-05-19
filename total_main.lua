@@ -3521,6 +3521,18 @@
         end
     end,})
 
+    getgenv().DeleteAllKillParts = Tab16:CreateButton({
+    Name = "Delete All Kill Parts",
+    Callback = function()
+        local Workspace = cloneref and cloneref(game:GetService("Workspace")) or game:GetService("Workspace")
+
+        for _, obj in ipairs(Workspace:GetDescendants()) do
+            if obj:IsA("BasePart") and (string.match(obj.Name:upper(), "KILLPART") or string.match(obj.Name:upper(), "KILL")) or string.match(obj.Name:upper(), "KillPart") or string.match(obj.Name:upper(), "Kill") or  or string.match(obj.Name:upper(), "kill") then
+                obj:Destroy()
+            end
+        end
+    end,})
+
     getgenv().AntiBlur_Univ = Tab16:CreateToggle({
     Name = "Anti Teleport",
     CurrentValue = false,
