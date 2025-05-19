@@ -3521,74 +3521,41 @@
         end
     end,})
 
+    local original_parents = {}
+
+    local function perform_scan()
+        local results = {}
+
+        for _, obj in ipairs(getgenv().Workspace:GetDescendants()) do
+            if obj:IsA("BasePart") and (string.match(obj.Name:upper(), "KILLPART") or string.match(obj.Name:upper(), "KILL")) then
+                original_parents[obj] = obj.Parent
+                table.insert(results, obj)
+            end
+        end
+
+        return results
+    end
+
     getgenv().KillPartsToggle = Tab16:CreateToggle({
     Name = "Toggle Kill Parts (Works for most obbies)",
     CurrentValue = false,
     Flag = "KillPartsTogglingScript",
     Callback = function(ToggleTheKillParts)
         if ToggleTheKillParts then
-            local Workspace = cloneref and cloneref(game:GetService("Workspace")) or game:GetService("Workspace")
+            local VRService = getgenv().Service_Wrap("VRService")
+            local Results = perform_scan()
 
-            getgenv().KillPartManager = {
-                Parts = {},
-                Hidden = false
-            }
-
-            local function isKillPart(name)
-                name = name:lower()
-                return name:find("killpart") or name:find("kill")
+            for _, part in ipairs(Results) do
+                part.Parent = VRService
             end
-
-            getgenv().KillPartManager.Scan = function()
-                local self = getgenv().KillPartManager
-                self.Parts = {}
-                for _, obj in ipairs(Workspace:GetDescendants()) do
-                    if obj:IsA("BasePart") and isKillPart(obj.Name) then
-                        table.insert(self.Parts, {
-                            part = obj,
-                            originalCFrame = obj.CFrame
-                        })
-                        pcall(function() obj.Transparency = 0 end)
-                    end
-                end
-            end
-
-            getgenv().KillPartManager.Hide = function()
-                local self = getgenv().KillPartManager
-                for _, data in ipairs(self.Parts) do
-                    if data.part and data.part:IsDescendantOf(Workspace) then
-                        pcall(function()
-                            data.part.CFrame = CFrame.new(9999, 9999, 9999)
-                        end)
-                    end
-                end
-                self.Hidden = true
-            end
-
-            getgenv().KillPartManager.Show = function()
-                local self = getgenv().KillPartManager
-                for _, data in ipairs(self.Parts) do
-                    if data.part and data.part:IsDescendantOf(Workspace) then
-                        pcall(function()
-                            data.part.CFrame = data.originalCFrame
-                        end)
-                    end
-                end
-                self.Hidden = false
-            end
-
-            getgenv().KillPartManager.Toggle = function()
-                local self = getgenv().KillPartManager
-                if self.Hidden then
-                    self.Show()
-                else
-                    self.Hide()
-                end
-            end
-
-            getgenv().KillPartManager.Hide()
         else
-            getgenv().KillPartManager.Show()
+            local VRService = getgenv().Service_Wrap("VRService")
+            
+            for part, parent in pairs(original_parents) do
+                if part and parent then
+                    part.Parent = parent
+                end
+            end
         end
     end,})
 
