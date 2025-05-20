@@ -1206,17 +1206,17 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V9.9.7 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.0.2 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
-            LoadingSubtitle = "Zacks Easy Hub | Wassup.",
+            LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
                 Enabled = false,
-                FolderName = "ConfigurationZacksEasyHub",
-                FileName = "ZacksEasyHub"
+                FolderName = "ConfigurationFlamesHub",
+                FileName = "FlamesHub"
             },
             Discord = {
                 Enabled = false,
-                Invite = "zackseasyhub",
+                Invite = "",
                 RememberJoins = false
             },
             KeySystem = false,
@@ -1232,28 +1232,28 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Easy Hub ⭐ | V9.9.7 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.0.2 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
-            LoadingSubtitle = "Zacks Easy Hub | Wassup.",
+            LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
                 Enabled = false,
-                FolderName = "ConfigurationZacksEasyHub",
-                FileName = "ZacksEasyHub"
+                FolderName = "ConfigurationFlamesHub",
+                FileName = "FlamesHub"
             },
             Discord = {
-                Enabled = true,
-                Invite = "zackseasyhub",
+                Enabled = false,
+                Invite = "",
                 RememberJoins = true
             },
             KeySystem = false,
             KeySettings = {
-                Title = "Zacks Easy Key System",
+                Title = "Flames Key System",
                 Subtitle = "Welcome, "..tostring(getgenv().LocalPlayer),
-                Note = "This key is easy (No pun intended).",
-                FileName = "ZEH_Admin_Key",
+                Note = "Hello!",
+                FileName = "Admin_Key",
                 SaveKey = true,
                 GrabKeyFromSite = false,
-                Key = {"ZACKSEASYHUB_2025"}
+                Key = {"REKT_2025"}
             }
         })
     end
@@ -1917,7 +1917,7 @@
         end
     end
     wait()
-    -- AntiLag modified exclusively by Zacks Easy Hub
+    -- AntiLag modified exclusively by Flames Hub
     if not getgenv().AbsoluteAntiLagZEH then
         local Terrain = getgenv().Terrain
         local Lighting = getgenv().Lighting
@@ -1959,7 +1959,7 @@
         wait(0.1)
         getgenv().AbsoluteAntiLagZEH = true
     else
-        warn("Anti-Lag already loaded for Zacks Easy Hub!")
+        warn("Anti-Lag already loaded for Flames Hub!")
     end
     wait()
     local safeEmotes = {
@@ -3411,7 +3411,7 @@
     Flag = "SendNotifMessage",
     Callback = function(Notif_Sender)
         getgenv().GuiService:SendNotification({
-            Title = tostring("Zacks Easy Hub:"),
+            Title = tostring("Flames Hub:"),
             Text = tostring(Notif_Sender),
         })
     end,})
@@ -3465,10 +3465,10 @@
             getgenv().antiFlingEnabled = true
             getgenv().antiFlingThing = nil
 
-            local dudes = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
-            local RunServ = cloneref and cloneref(game:GetService("RunService")) or game:GetService("RunService")
+            local dudes = getgenv().Players
+            local RunServ = getgenv().RunService
             local step = RunServ.RenderStepped
-            local me = dudes.LocalPlayer
+            local me = getgenv().LocalPlayer
 
             local function doAntiFling()
                 if getgenv().antiFlingThing then
@@ -3490,16 +3490,23 @@
                     local mind = getgenv().Humanoid or body and body:FindFirstChildWhichIsA("Humanoid")
                     if not core or not mind then return end
 
-                    for _, bit in ipairs(core:GetChildren()) do
-                        if bit:IsA("BodyMover") or bit:IsA("VectorForce") or bit:IsA("AlignPosition") or bit:IsA("LinearVelocity") then
-                            bit:Destroy()
+                    for _, obj in ipairs(core:GetChildren()) do
+                        if obj:IsA("BodyMover") or obj:IsA("VectorForce") or obj:IsA("AlignPosition") or obj:IsA("LinearVelocity") or obj:IsA("Torque") then
+                            obj:Destroy()
                         end
                     end
 
-                    if core.Velocity.Magnitude > 150 then
-                        core.Velocity = Vector3.new(0, core.Velocity.Y, 0)
+                    local maxSpeed = 100
+                    local velocity = core.Velocity
+                    if velocity.Magnitude > maxSpeed then
+                        core.Velocity = Vector3.new(
+                            math.clamp(velocity.X, -maxSpeed, maxSpeed),
+                            math.clamp(velocity.Y, -75, 75),
+                            math.clamp(velocity.Z, -maxSpeed, maxSpeed)
+                        )
                     end
-                    if core.RotVelocity.Magnitude > 100 then
+
+                    if core.RotVelocity.Magnitude > 75 then
                         core.RotVelocity = Vector3.zero
                     end
 
@@ -3512,8 +3519,7 @@
             doAntiFling()
         else
             getgenv().antiFlingEnabled = false
-            getgenv().antiFlingEnabled = false
-            wait(0.2)
+
             if getgenv().antiFlingThing then
                 getgenv().antiFlingThing:Disconnect()
                 getgenv().antiFlingThing = nil
@@ -3565,41 +3571,40 @@
     Flag = "AntiTeleportToggleUniversal",
     Callback = function(anti_teleport_toggle)
         if anti_teleport_toggle then
-            getgenv().AntiTeleport = true
+            getgenv().AntiTPEnabled = false
+            getgenv().LastPosition = nil
+            getgenv().AntiTPConnection = nil
 
-            local Players = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
-            local LocalPlayer = Players.LocalPlayer
+            getgenv().ToggleAntiTP = function(state)
+                getgenv().AntiTPEnabled = state
 
-            repeat task.wait() until LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-
-            local HRP = LocalPlayer.Character:WaitForChild("HumanoidRootPart")
-            local lastCFrame = HRP.CFrame
-
-            task.spawn(function()
-                while task.wait(0.05) do
-                    if not getgenv().AntiTeleport then
-                        lastCFrame = HRP.CFrame
-                        continue
-                    end
-
-                    local current = HRP.CFrame
-
-                    local posDiff = (current.Position - lastCFrame.Position).Magnitude
-
-                    local rotDiff = (current.LookVector - lastCFrame.LookVector).Magnitude +
-                                    (current.UpVector - lastCFrame.UpVector).Magnitude
-
-                    if posDiff > 5 or rotDiff > 0.1 then
-                        warn("[AntiTeleport] Unauthorized CFrame/Position movement detected. Reverting...")
-                        HRP.CFrame = lastCFrame
-                    else
-                        lastCFrame = HRP.CFrame
-                    end
+                if getgenv().AntiTPConnection then
+                    getgenv().AntiTPConnection:Disconnect()
+                    getgenv().AntiTPConnection = nil
                 end
-            end)
+
+                if state then
+                    getgenv().LastPosition = getgenv().HumanoidRootPart and getgenv().HumanoidRootPart.Position
+                    getgenv().AntiTPConnection = getgenv().RunService.Heartbeat:Connect(function(dt)
+                        if not getgenv().AntiTPEnabled then return end
+                        local root = getgenv().HumanoidRootPart
+                        if not root then return end
+                        local currentPos = root.Position
+                        local lastPos = getgenv().LastPosition
+                        if lastPos then
+                            local distance = (currentPos - lastPos).Magnitude
+                            if distance > (getgenv().Humanoid and getgenv().Humanoid.WalkSpeed or 16) * dt + 10 then
+                                getgenv().OnTeleportDetected = true
+                            end
+                        end
+                        getgenv().LastPosition = currentPos
+                    end)
+                end
+            end
+            wait(0.1)
+            getgenv().ToggleAntiTP(true)
         else
-            getgenv().AntiTeleport = false
-            getgenv().AntiTeleport = false
+            getgenv().ToggleAntiTP(false)
         end
     end,})
 
@@ -3609,54 +3614,70 @@
     Flag = "AntiBlurUniversalToggle",
     Callback = function(anti_blur_toggle)
         if anti_blur_toggle then
-            if getgenv().AntiBlurConnection then
-                getgenv().AntiBlurConnection:Disconnect()
+            if getgenv().AntiBlurConnections then
+                for _, con in ipairs(getgenv().AntiBlurConnections) do con:Disconnect() end
             end
-
-            local Workspace = cloneref and cloneref(game:GetService("Workspace")) or game:GetService("Workspace")
-            local Players = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
-            local Camera = getgenv().Camera or Workspace.CurrentCamera
 
             getgenv().AntiBlurEnabled = true
-            getgenv().AntiBlurConnection = nil
+            getgenv().AntiBlurConnections = {}
 
-            local function RemoveBlurEffects(cam)
-                for _, child in ipairs(cam:GetChildren()) do
-                    if child:IsA("BlurEffect") then
-                        child:Destroy()
-                    end
+            local Workspace = getgenv().Workspace
+            local Lighting = getgenv().Lighting
+            local Camera = getgenv().Camera or Workspace.CurrentCamera
+
+            local function trackConnection(conn)
+                table.insert(getgenv().AntiBlurConnections, conn)
+            end
+
+            local function RemoveBlurIfPresent(obj)
+                if obj:IsA("BlurEffect") then
+                    obj:Destroy()
                 end
             end
 
-            local function SetupBlurWatcher()
-                if getgenv().AntiBlurConnection then
-                    getgenv().AntiBlurConnection:Disconnect()
+            local function WatchForBlurRecursive(container)
+                if not container or typeof(container) ~= "Instance" then return end
+
+                RemoveBlurIfPresent(container)
+
+                for _, child in ipairs(container:GetChildren()) do
+                    WatchForBlurRecursive(child)
                 end
+
+                local added = container.ChildAdded:Connect(function(child)
+                    if not getgenv().AntiBlurEnabled then return end
+                    RemoveBlurIfPresent(child)
+                    WatchForBlurRecursive(child)
+                end)
+
+                trackConnection(added)
+            end
+
+            local function SetupAntiBlur()
+                for _, con in ipairs(getgenv().AntiBlurConnections) do
+                    con:Disconnect()
+                end
+                table.clear(getgenv().AntiBlurConnections)
 
                 if not getgenv().AntiBlurEnabled then return end
-                RemoveBlurEffects(Camera)
 
-                getgenv().AntiBlurConnection = Camera.ChildAdded:Connect(function(child)
-                    if getgenv().AntiBlurEnabled and child:IsA("BlurEffect") then
-                        task.wait() -- slight delay in case it's added async
-                        if child and child.Parent == Camera then
-                            child:Destroy()
-                        end
-                    end
+                WatchForBlurRecursive(Camera)
+                WatchForBlurRecursive(Lighting)
+
+                local camChange = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+                    Camera = Workspace.CurrentCamera
+                    WatchForBlurRecursive(Camera)
                 end)
+
+                trackConnection(camChange)
             end
-
-            Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
-                Camera = workspace.CurrentCamera
-                SetupBlurWatcher()
-            end)
-
-            SetupBlurWatcher()
 
             getgenv().ToggleAntiBlur = function(state)
-                getgenv().AntiBlurEnabled = (state ~= false) -- default true
-                SetupBlurWatcher()
+                getgenv().AntiBlurEnabled = (state ~= false)
+                SetupAntiBlur()
             end
+
+            SetupAntiBlur()
         else
             getgenv().AntiBlurEnabled = false
             getgenv().AntiBlurEnabled = false
@@ -4848,127 +4869,131 @@
         end
     end,})
 
-    getgenv().Owner_Animations = Tab2:CreateToggle({
-    Name = "Zacks Owner Animations (Applies every respawn)",
-    CurrentValue = false,
-    Flag = "LoadZacksOwnerAnims",
-    Callback = function(apply_to_respawn_anims)
-        if apply_to_respawn_anims then
-            getgenv().ownerAnimsEnabled = true
-            local LocalPlayer = getgenv().LocalPlayer
-            
-            getgenv().Humanoid.WalkSpeed = 0
-            getgenv().HumanoidRootPart.Anchored = false
-            wait(1)
-            local function run_anims(character)
-                if not character then return warn("Character not found!") end
-                local Animate = character:FindFirstChild("Animate")
-                if not Animate then return warn("Animate script is missing!") end
-
-                Animate.Disabled = true
-                task.wait(0.1)
-                Animate.Disabled = false
-
-                local humanoid = character:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
-                        track:Stop()
-                    end
-                end
-
-                task.wait(0.2)
-
-                Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=" .. Knight_Idle_1
-                Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=" .. Knight_Idle_2
-                Animate.walk:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Walk
-                Animate.run:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Run
-                Animate.jump:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Jump
-                Animate.climb:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Climb
-                Animate.fall:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Fall
-            end
-
-            getgenv().ownerAnimsEnabled = true
-            wait(0.1)
-            local function onCharacterAdded(character)
-                if getgenv().ownerAnimsEnabled then
-                    task.wait(1)
-                    run_anims(character)
-                else
-                    warn("Animations are disabled.")
-                end
-            end
-
-            if LocalPlayer.Character then
-                onCharacterAdded(LocalPlayer.Character)
-            end
-
-            LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
-
-            local function run_anims(character)
-                if not character then return warn("Character not found!") end
-                local Animate = character:FindFirstChild("Animate")
-                if not Animate then return warn("Animate script is missing!") end
-
-                Animate.Disabled = true
-                task.wait(0.1)
-                Animate.Disabled = false
-
-                local humanoid = getgenv().Humanoid
-                if humanoid then
-                    for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
-                        track:Stop()
-                    end
-                end
-
-                task.wait(0.2)
-
-                Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=" .. Knight_Idle_1
-                Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=" .. Knight_Idle_2
-                Animate.walk:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Walk
-                Animate.run:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Run
-                Animate.jump:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Jump
-                Animate.climb:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Climb
-                Animate.fall:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Fall
-            end
-
-            local function onCharacterAdded(character)
-                if getgenv().ownerAnimsEnabled then
-                    task.wait(1)
-                    run_anims(character)
-                else
-                    warn("Animations are disabled.")
-                end
-            end
-            wait(1.5)
-            getgenv().Humanoid.WalkSpeed = 16
-
-            if LocalPlayer.Character then
-                onCharacterAdded(LocalPlayer.Character)
-            end
-
-            LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
-        else
-            getgenv().ownerAnimsEnabled = false
-            getgenv().ownerAnimsEnabled = false
-            if getgenv().Humanoid and getgenv().HumanoidRootPart then
+    if game.PlaceId == 6884319169 or game.PlaceId == 15546218972 then
+        getgenv().Owner_Animations = Tab2:CreateToggle({
+        Name = "Flames Animations (Applies every respawn)",
+        CurrentValue = false,
+        Flag = "LoadFlamesOwnerAnims",
+        Callback = function(apply_to_respawn_anims)
+            if apply_to_respawn_anims then
+                getgenv().ownerAnimsEnabled = true
+                local LocalPlayer = getgenv().LocalPlayer
+                
                 getgenv().Humanoid.WalkSpeed = 0
                 getgenv().HumanoidRootPart.Anchored = false
-                wait(1.5)
-                local humanoid = getgenv().Humanoid
-                if humanoid then
-                    for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
-                        track:Stop()
+                wait(1)
+                local function run_anims(character)
+                    if not character then return warn("Character not found!") end
+                    local Animate = character:FindFirstChild("Animate")
+                    if not Animate then return warn("Animate script is missing!") end
+
+                    Animate.Disabled = true
+                    task.wait(0.1)
+                    Animate.Disabled = false
+
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if humanoid then
+                        for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
+                            track:Stop()
+                        end
+                    end
+
+                    task.wait(0.2)
+
+                    Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=" .. Knight_Idle_1
+                    Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=" .. Knight_Idle_2
+                    Animate.walk:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Walk
+                    Animate.run:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Run
+                    Animate.jump:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Jump
+                    Animate.climb:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Climb
+                    Animate.fall:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Fall
+                end
+
+                getgenv().ownerAnimsEnabled = true
+                wait(0.1)
+                local function onCharacterAdded(character)
+                    if getgenv().ownerAnimsEnabled then
+                        task.wait(1)
+                        run_anims(character)
+                    else
+                        warn("Animations are disabled.")
+                    end
+                end
+
+                if LocalPlayer.Character then
+                    onCharacterAdded(LocalPlayer.Character)
+                end
+
+                LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
+
+                local function run_anims(character)
+                    if not character then return warn("Character not found!") end
+                    local Animate = character:FindFirstChild("Animate")
+                    if not Animate then return warn("Animate script is missing!") end
+
+                    Animate.Disabled = true
+                    task.wait(0.1)
+                    Animate.Disabled = false
+
+                    local humanoid = getgenv().Humanoid
+                    if humanoid then
+                        for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
+                            track:Stop()
+                        end
+                    end
+
+                    task.wait(0.2)
+
+                    Animate.idle.Animation1.AnimationId = "http://www.roblox.com/asset/?id=" .. Knight_Idle_1
+                    Animate.idle.Animation2.AnimationId = "http://www.roblox.com/asset/?id=" .. Knight_Idle_2
+                    Animate.walk:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Walk
+                    Animate.run:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Run
+                    Animate.jump:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Jump
+                    Animate.climb:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Climb
+                    Animate.fall:FindFirstChildOfClass("Animation").AnimationId = "http://www.roblox.com/asset/?id=" .. Zombie_Fall
+                end
+
+                local function onCharacterAdded(character)
+                    if getgenv().ownerAnimsEnabled then
+                        task.wait(1)
+                        run_anims(character)
+                    else
+                        warn("Animations are disabled.")
                     end
                 end
                 wait(1.5)
                 getgenv().Humanoid.WalkSpeed = 16
+
+                if LocalPlayer.Character then
+                    onCharacterAdded(LocalPlayer.Character)
+                end
+
+                LocalPlayer.CharacterAdded:Connect(onCharacterAdded)
+            else
+                getgenv().ownerAnimsEnabled = false
+                getgenv().ownerAnimsEnabled = false
+                if getgenv().Humanoid and getgenv().HumanoidRootPart then
+                    getgenv().Humanoid.WalkSpeed = 0
+                    getgenv().HumanoidRootPart.Anchored = false
+                    wait(1.5)
+                    local humanoid = getgenv().Humanoid
+                    if humanoid then
+                        for _, track in pairs(humanoid:GetPlayingAnimationTracks()) do
+                            track:Stop()
+                        end
+                    end
+                    wait(1.5)
+                    getgenv().Humanoid.WalkSpeed = 16
+                end
             end
+        end,})
+        wait(0.3)
+        if getgenv().ownerAnimsEnabled == true then
+            getgenv().Owner_Animations:Set(false)
+            getgenv().ownerAnimsEnabled = false
         end
-    end,})
-    wait(0.3)
-    if getgenv().ownerAnimsEnabled == true then
-        getgenv().Owner_Animations:Set(false)
-        getgenv().ownerAnimsEnabled = false
+    else
+        warn("User does not seem to be in MIC UP or MIC UP 17+, not loading custom owner animations toggle.")
     end
     wait(0.2)
     if game.PlaceId == 17274762379 then
