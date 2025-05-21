@@ -1216,7 +1216,7 @@
     wait()
     getgenv().Module_For_ZEH = ZEH_Module
     -- Current UI is automatically hidden, shoutout to Rayfield (and the hiddenUI function.).
-    getgenv().AllClipboards("https://discord.gg/VJh3kkYzBn")
+    getgenv().AllClipboards("https://github.com/LmaoItsCrazyBro/new_main/releases <-- make sure to stay updated.")
     wait()
     local Window 
     wait(0.2)
