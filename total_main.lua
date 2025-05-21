@@ -699,7 +699,19 @@
         wait(0.1)
         getgenv().passed_baseplate_check = true
     end
-    wait(0.1)
+    wait(0.5)
+    local TextChatService = getgenv().Service_Wrap("TextChatService")
+    local TextChannels = TextChatService:FindFirstChild("TextChannels")
+    local RBXGeneral = TextChannels:FindFirstChild("RBXGeneral")
+
+    RBXGeneral:DisplaySystemMessage("You are now running:")
+    wait(1.7)
+    RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
+    wait(1.8)
+    RBXGeneral:DisplaySystemMessage("V-5.0.2")
+    wait(1.5)
+    RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
+    wait(0.5)
     -- This is a full setup for Rayfield, which is why my script is able to work on any executor.
     local Rayfield
     wait(0.1)
