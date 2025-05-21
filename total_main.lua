@@ -2194,8 +2194,10 @@
     Callback = function(emote_picked)
         local emoteToPlay = type(emote_picked) == "table" and emote_picked[1] or tostring(emote_picked)
 
-        if getgenv().Character:FindFirstChildWhichIsA("Humanoid") then
+        if getgenv().Character:FindFirstChildWhichIsA("Humanoid") and getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
             getgenv().Humanoid:PlayEmote(emoteToPlay)
+        elseif not getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
+            return getgenv().notify("Failure:", "You are not R15!", 5)
         end
     end,})
     wait(0.1)
