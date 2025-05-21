@@ -63,7 +63,7 @@
     end
     -- [] -->> Make sure the script it's self does not get executed more then once, when executed, they will need to click the Re-Execute GUI button to restart the script. <<-- [] --
     if SCRIPT_EXECUTED or getgenv().SCRIPT_EXECUTED and not _G.SCRIPT_EXECUTED == true then  
-        return Notification:Notify("Heads Up!", "Zacks Easy Hub is already running!", 5)
+        return Notification:Notify("Heads Up!", "Flames Hub is already running!", 5)
     end
     pcall(function() getgenv().SCRIPT_EXECUTED = true end)
     -- Sometimes would fuck up, but that's because I accidentally removed the "not _G.SCRIPT_EXECUTED == true" part, didn't know it was necessary, so oops.
@@ -74,7 +74,7 @@
     elseif (enabled_vc == false and (not game.PlaceId == 6884319169)) or (not game.PlaceId == 15546218972) then
         Notification:Notify("Success!", "Connected.", 5)
     elseif enabled_vc == false and game.PlaceId == 6884319169 or game.PlaceId == 15546218972 then
-        return Notification:Notify("Sorry!", "Unable to load Zacks Easy Hub (No VC)", 5)
+        return Notification:Notify("Sorry!", "Unable to load Flames Hub (No VC)", 5)
     else
         Notification:Notify("Passed.", "Unknown error occurred.", 5) -- I actually have no idea when or why I added this, but I guess I kept it, so it might be necessary, I don't know man.
     end
@@ -199,11 +199,11 @@
     local function assign(player)
         -- If you want a Title, update it below, I and the people below don't really play MIC UP or any game anymore, so you can do what ever you want with it lol.
         if isWatchedPlayer(player.Name) then
-            make_title(player, "👑 Zacks Easy Hub | KING 👑", Color3.fromRGB(196, 40, 28), 0)
+            make_title(player, "👑 Flames Hub | KING 👑", Color3.fromRGB(196, 40, 28), 0)
         elseif player.Name == specialPlayer then
-            make_title(player, "👧 Zacks Easy Hub | Daughter 👧", Color3.fromRGB(89, 34, 89), 0.3)
+            make_title(player, "👧 Flames Hub | Daughter 👧", Color3.fromRGB(89, 34, 89), 0.3)
         elseif beta_tester(player.Name) then
-            make_title(player, "✨ Zacks Easy Hub | Beta Tester ✨", Color3.fromRGB(0, 0, 0), 0.1)
+            make_title(player, "✨ Flames Hub | Beta Tester ✨", Color3.fromRGB(0, 0, 0), 0.1)
         end
     end
 
@@ -366,7 +366,7 @@
             if mapModel and mapModel:IsA("Model") then
                 mapModel.Parent = Parent
             else
-                warn("Failed to load and insert Zacks Easy Hub | Crossroads Map Model.")
+                warn("Failed to load and insert Flames Hub | Crossroads Map Model.")
             end
         end
         wait()
@@ -998,7 +998,7 @@
         title.Size = UDim2.new(1, 0, 0.3, 0)
         title.Position = UDim2.new(0, 0, 0, 0)
         title.BackgroundTransparency = 1
-        title.Text = "Would you like to automatically run System Broken when loading Zacks Easy Hub?"
+        title.Text = "Would you like to automatically run System Broken when loading Flames Hub?"
         title.TextColor3 = Color3.fromRGB(255, 255, 255)
         title.TextScaled = true
         title.Font = Enum.Font.GothamBold
@@ -1133,7 +1133,7 @@
         title.Size = UDim2.new(1, 0, 0.3, 0)
         title.Position = UDim2.new(0, 0, 0, 0)
         title.BackgroundTransparency = 1
-        title.Text = "Would you like to automatically have the TP Tool when excuting Zacks Easy Hub?"
+        title.Text = "Would you like to automatically have the TP Tool when excuting Flames Hub?"
         title.TextColor3 = Color3.fromRGB(255, 255, 255)
         title.TextScaled = true
         title.Font = Enum.Font.GothamBold
@@ -7150,13 +7150,13 @@
                 end
 
                 local write_words = {
-                    "Zacks Easy Hub [WINNING]!",
+                    "Flames Hub [WINNING]!",
                     "Join: VJh3kkYzBn",
-                    "Zacks Easy Hub [WE UP]!",
-                    "Zacks Easy Hub V6, POWERFUL!",
+                    "Flames Hub [WE UP]!",
+                    "Flames Hub V6, POWERFUL!",
                     "Powering Automation | Scripting",
-                    "Zacks Easy Hub | WE OP!",
-                    "Zacks Easy Hub | WE SIGMA",
+                    "Flames Hub | WE OP!",
+                    "Flames Hub | WE SIGMA",
                     "BEST FREE SCRIPT RN!",
                     "WE ARE TAKING OVER, JOIN US!",
                     "IF YOU DONT JOIN, YOUR NOT SIGMA"
@@ -10124,7 +10124,7 @@
     wait(0.1)
     if game.PlaceId == 6884319169 or game.PlaceId == 15546218972 then
         getgenv().TeleportToCrossroadsMap = Tab10:CreateButton({
-        Name = "TP To Crossroads Map (Only for Zacks Easy Hub users)",
+        Name = "TP To Crossroads Map (Only for Flames Hub users)",
         Callback = function()
             if getgenv().Humanoid.Sit or getgenv().Humanoid.Sit == true then
                 getgenv().Humanooid:ChangeState(3)
@@ -10136,7 +10136,7 @@
         end,})
 
         getgenv().TeleportToModernHouseMap = Tab10:CreateButton({
-        Name = "TP To Modern House Map (Only for Zacks Easy Hub users)",
+        Name = "TP To Modern House Map (Only for Flames Hub users)",
         Callback = function()
             if getgenv().Humanoid.Sit or getgenv().Humanoid.Sit == true then
                 getgenv().Humanoid:ChangeState(3)
@@ -10148,7 +10148,7 @@
         end,})
 
         --[[getgenv().Prison_Life_Map_TP = Tab10:CreateButton({
-        Name = "TP To Prison Life (Only for Zacks Easy Hub users)",
+        Name = "TP To Prison Life (Only for Flames Hub users)",
         Callback = function()
             local Workspace = getgenv().Workspace
             local Prison_Life_Map = Workspace:FindFirstChild("Prison_Life")
@@ -10176,7 +10176,7 @@
         end,})
 
         getgenv().Teleport_To_VIBE_NYC_Map = Tab10:CreateButton({
-        Name = "TP To VIBE NYC Map (Only for Zacks Easy Hub users)",
+        Name = "TP To VIBE NYC Map (Only for Flames Hub users)",
         Callback = function()
             if getgenv().Humanoid.Sit or getgenv().Humanoid.Sit == true then
                 getgenv().Humanoid:ChangeState(3)
@@ -13854,7 +13854,7 @@
 
     getgenv().textForFullyLoadedMessage = Tab20:CreateInput({
     Name = "Fully Loaded Message",
-    CurrentValue = readConfigValue("Fully_Loaded_Message") or "Zacks Easy Hub - Winning!",
+    CurrentValue = readConfigValue("Fully_Loaded_Message") or "Flames Hub - Winning!",
     PlaceholderText = "Text Here",
     RemoveTextAfterFocusLost = true,
     Flag = "toStringForFullLoadedMsg",
@@ -14095,7 +14095,7 @@
         getgenv().performance_stats = true
     end
     --[[wait(0.2)
-    getgenv().Easies_Configuration["Fully_Loaded_Message"] = "Zacks Easy Hub - On TOP!"
+    getgenv().Easies_Configuration["Fully_Loaded_Message"] = "Flames Hub - On TOP!"
     wait(0.3)
     if getgenv().fully_loaded_message_script then
         warn("Already loaded fully loaded message.")
@@ -14115,19 +14115,19 @@
     })
     wait(0.2)
     if getgenv().output_already_viewed then
-        warn("Already viewed and injected 'Zacks Easy Hub'")
+        warn("Already viewed and injected 'Flames Hub'")
     else
         if game.PlaceId == 6884319169 or game.PlaceId == 15546218972 then
             GuiService:SendNotification({
                 Title = "Please wait...",
-                Text = "Attaching Zacks Easy Hub into MIC UP 🔊...",
+                Text = "Attaching Flames Hub into MIC UP 🔊...",
             })
             wait(0.3)
             if not getgenv().Has_Died_Func then
                 if setfpscap then
                     setfpscap(0)
                     wait(0.5)
-                    print("Injecting Zacks Easy Hub...")
+                    print("Injecting Flames Hub...")
                     wait(0.5)
                     getgenv().emoting_actions(0)
                     wait(0.2)
@@ -14163,7 +14163,7 @@
             if setfpscap then
                 setfpscap(1)
                 wait(0.5)
-                print("Injecting Zacks Easy Hub...")
+                print("Injecting Flames Hub...")
                 wait(1)
                 getgenv().emoting_actions(0)
                 getgenv().emoting_actions(0)
