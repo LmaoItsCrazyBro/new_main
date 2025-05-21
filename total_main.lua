@@ -708,30 +708,34 @@
     wait(1.7)
     RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
     wait(1.8)
-    RBXGeneral:DisplaySystemMessage("V-5.0.2")
+    RBXGeneral:DisplaySystemMessage("V-5.0.6")
     wait(1.5)
     RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
     wait(0.5)
-    -- This is a full setup for Rayfield, which is why my script is able to work on any executor.
-    local Rayfield
-    wait(0.1)
-    if executor_Name == "AWP" then
-        print("'AWP' detected, using custom/modified loadstring collector.")
-        local response = getgenv().httprequest_Init({
-            Url = "https://raw.githubusercontent.com/EnterpriseExperience/MicUpSource/refs/heads/main/GetUILibrary",
-            Method = "GET"
-        })
-        
-        if response and response.StatusCode == 200 then
-            Rayfield = loadstring(response.Body)()
+    -- This is a full advanced setup for Rayfield, which is why my UI is able to work on any executor.
+    local Rayfield = nil
+    local MAX_ATTEMPTS = 5
+    local WAIT_BETWEEN_ATTEMPTS = 1
+
+    for attempt = 1, MAX_ATTEMPTS do
+        local success, result = pcall(function()
+            return loadstring(game:HttpGet("https://raw.githubusercontent.com/EnterpriseExperience/MicUpSource/refs/heads/main/GetUILibrary"))()
+        end)
+
+        if success and result then
+            Rayfield = result
+            print("Rayfield loaded successfully on attempt:", attempt)
+            break
         else
-            print("Failed to fetch script:", response.StatusCode)
+            warn("Rayfield load failed on attempt:", attempt, "Error:", result)
+            task.wait(WAIT_BETWEEN_ATTEMPTS)
         end
-    else
-        warn("'AWP' not detected, using regular Loadstring collector.")
-        Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/EnterpriseExperience/MicUpSource/refs/heads/main/GetUILibrary'))()
     end
-    wait(0.2)
+
+    if not Rayfield then
+        warn("[CRITICAL]: Failed to load Rayfield after multiple attempts.")
+    end
+    wait(0.5)
     -- This can be used anytime while using the script by executing the following: getgenv().notify("Welcome", "Your content here.", 6)
     getgenv().notify = function(title, content, duration)
         Rayfield:Notify({
@@ -1218,7 +1222,7 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.0.2 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.0.6 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -1244,7 +1248,7 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.0.2 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.0.6 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -2178,12 +2182,23 @@
     Name = "Copy Link To See Latest Updates",
     Callback = function()
         if getgenv().AllClipboards then
-            getgenv().AllClipboards("https://github.com/EnterpriseExperience/MicUpSource/releases")
+            getgenv().AllClipboards("https://github.com/LmaoItsCrazyBro/new_main/releases")
         else
-            warn("https://github.com/EnterpriseExperience/MicUpSource/releases")
+            warn("https://github.com/LmaoItsCrazyBro/new_main/releases")
             getgenv().notify("Failure", "Posted the link in Developer Console, couldn't copy.", 6)
         end
     end,})
+
+    function check_r15()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
+            return true
+        else
+            return getgenv().notify("Failure:", "You do not seem to be R15.", 5)
+        end
+    end
+
+    local is_r15 = check_r15()
+
     wait(0.4)
     getgenv().PlayAnyEmote = Tab2:CreateDropdown({
     Name = "Play Emote",
