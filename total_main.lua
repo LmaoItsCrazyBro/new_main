@@ -330,7 +330,8 @@
             "UserInputService",
             "TextChatService",
             "ContextActionService",
-            "GuiService"
+            "GuiService",
+            "PhysicsService"
         }
         -- I do use all of these by the way, people said it's ChatGPT, but I use all of these, these are all in use, this is a huge script, go check it.
         -- The only one I probably don't use is ReplicatedFirst, but I most likely do.
@@ -3431,6 +3432,136 @@
         getgenv().AntiSit_Func:Set(false)
         getgenv().disabled_sit_function = false
     end
+
+    getgenv().HD_FlyEnabled = false
+    local FlyConnection
+    local speed = 40
+
+    function DisableFlyScript()
+        getgenv().HD_FlyEnabled = false
+
+        if FlyConnection then
+            FlyConnection:Disconnect()
+            FlyConnection = nil
+        end
+
+        local hrp = getgenv().HumanoidRootPart
+        if hrp:FindFirstChild("ExecutorFlyGyro") then
+            hrp.ExecutorFlyGyro:Destroy()
+        end
+        if hrp:FindFirstChild("ExecutorFlyPosition") then
+            hrp.ExecutorFlyPosition:Destroy()
+        end
+
+        if getgenv().Humanoid then
+            getgenv().Humanoid.PlatformStand = false
+        end
+    end
+
+    --[[getgenv().HDAdminFly = Tab2:CreateToggle({
+    Name = "HD Admin Fly (FE!)",
+    CurrentValue = false,
+    Flag = "FlyHDAdmin",
+    Callback = function(toggle_hd_fly)
+        if toggle_hd_fly then
+            getgenv().HD_FlyEnabled = true
+
+            local MoveDirection = Vector3.zero
+            local UserInputService = game:GetService("UserInputService")
+
+            local KeysDown = {
+                W = false,
+                A = false,
+                S = false,
+                D = false,
+                E = false,
+                Q = false,
+            }
+
+            UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                if gameProcessed then return end
+                local key = input.KeyCode
+                if key == Enum.KeyCode.W then KeysDown.W = true end
+                if key == Enum.KeyCode.A then KeysDown.A = true end
+                if key == Enum.KeyCode.S then KeysDown.S = true end
+                if key == Enum.KeyCode.D then KeysDown.D = true end
+                if key == Enum.KeyCode.E then KeysDown.E = true end
+                if key == Enum.KeyCode.Q then KeysDown.Q = true end
+            end)
+
+            UserInputService.InputEnded:Connect(function(input)
+                local key = input.KeyCode
+                if key == Enum.KeyCode.W then KeysDown.W = false end
+                if key == Enum.KeyCode.A then KeysDown.A = false end
+                if key == Enum.KeyCode.S then KeysDown.S = false end
+                if key == Enum.KeyCode.D then KeysDown.D = false end
+                if key == Enum.KeyCode.E then KeysDown.E = false end
+                if key == Enum.KeyCode.Q then KeysDown.Q = false end
+            end)
+
+            function GetInputDirection(cam)
+                local dir = Vector3.zero
+                if KeysDown.W then dir += cam.CFrame.LookVector end
+                if KeysDown.S then dir -= cam.CFrame.LookVector end
+                if KeysDown.D then dir += cam.CFrame.RightVector end
+                if KeysDown.A then dir -= cam.CFrame.RightVector end
+                if KeysDown.E then dir += cam.CFrame.UpVector end
+                if KeysDown.Q then dir -= cam.CFrame.UpVector end
+                return dir.Unit
+            end
+
+            function ToggleFly()
+                local hrp = getgenv().HumanoidRootPart
+                local humanoid = getgenv().Humanoid
+                local cam = getgenv().Camera
+
+                local bodyGyro = Instance.new("BodyGyro")
+                bodyGyro.MaxTorque = Vector3.new(1e9, 1e9, 1e9)
+                bodyGyro.P = 2000
+                bodyGyro.D = 50
+                bodyGyro.CFrame = hrp.CFrame
+                bodyGyro.Name = "ExecutorFlyGyro"
+                bodyGyro.Parent = hrp
+
+                local bodyPos = Instance.new("BodyPosition")
+                bodyPos.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+                bodyPos.P = 7500
+                bodyPos.D = 500
+                bodyPos.Position = hrp.Position
+                bodyPos.Name = "ExecutorFlyPosition"
+                bodyPos.Parent = hrp
+
+                humanoid.PlatformStand = true
+
+                FlyConnection = getgenv().RunService.Heartbeat:Connect(function(dt)
+                    if not getgenv().HD_FlyEnabled then return end
+
+                    local dir = GetInputDirection(cam)
+                    if dir ~= dir then return end
+
+                    bodyPos.Position = hrp.Position + (dir * getgenv().HD_FlySpeed * dt)
+
+                    bodyGyro.CFrame = CFrame.new(hrp.Position, hrp.Position + cam.CFrame.LookVector)
+                end)
+            end
+
+            ToggleFly()
+        else
+            DisableFlyScript()
+        end
+    end,})
+
+    getgenv().HDAdminFly_Speed = Tab2:CreateSlider({
+    Name = "HD Admin Fly Speed",
+    Range = {1, 300},
+    Increment = 1,
+    Suffix = "",
+    CurrentValue = 50,
+    Flag = "EditFlySpeedHDAdmin",
+    Callback = function(HDAdminFlySpeed_Edit)
+        speed = tonumber(HDAdminFlySpeed_Edit)
+    end,})--]]
+
     wait(0.1)
     getgenv().SendOwnNotification = Tab1:CreateInput({
     Name = "Send Your Own Notification",
@@ -3530,7 +3661,7 @@
 
                 JailCellConnection = workspace.DescendantAdded:Connect(function(descendant)
                     if not getgenv().JailCellCheckEnabled then return end
-                    if descendant:IsA("Model") and descendant.Name == LocalPlayer.Name.." JailCell" then
+                    if descendant:IsA("BasePart") and descendant.Name == LocalPlayer.Name.." JailCell" then
                         Rejoin()
                     end
                 end)
@@ -3563,7 +3694,7 @@
 
                 IceBlockConnection = workspace.DescendantAdded:Connect(function(descendant)
                     if not getgenv().IceBlockCheckEnabled then return end
-                    if descendant:IsA("Model") and descendant.Name == LocalPlayer.Name.." FreezeBlock" then
+                    if descendant:IsA("Part") and descendant.Name == LocalPlayer.Name.." FreezeBlock" then
                         Rejoin()
                     end
                 end)
