@@ -3708,6 +3708,10 @@
         end
     end,})
 
+
+    local anti_knockback_connection
+    local antiKnockbackEnabled = false
+
     getgenv().AntiFlingToggle = Tab16:CreateToggle({
     Name = "Anti Fling",
     CurrentValue = false,
@@ -3721,6 +3725,36 @@
             local RunServ = getgenv().RunService
             local step = RunServ.RenderStepped
             local me = getgenv().LocalPlayer
+            local Players = dudes
+            local RunService = RunServ
+            local lp = me
+
+            local hrp
+            antiKnockbackEnabled = true
+
+            local function getHRP()
+                return getgenv().HumanoidRootPart or getgenv().Character:FindFirstChild("HumanoidRootPart")
+            end
+
+            local function onHeartbeat()
+                if not antiKnockbackEnabled then return end
+
+                hrp = getHRP()
+                if hrp then
+                    hrp.Velocity = Vector3.zero
+                    hrp.AssemblyLinearVelocity = Vector3.zero
+                    hrp.RotVelocity = Vector3.zero
+                    hrp.AssemblyAngularVelocity = Vector3.zero
+
+                    for _, v in ipairs(lp.Character:GetDescendants()) do
+                        if v:IsA("BodyVelocity") or v:IsA("BodyPosition") or v:IsA("VectorForce") or v:IsA("LinearVelocity") then
+                            v:Destroy()
+                        end
+                    end
+                end
+            end
+
+            anti_knockback_connection = RunService.Heartbeat:Connect(onHeartbeat)
 
             local function doAntiFling()
                 if getgenv().antiFlingThing then
@@ -3775,6 +3809,11 @@
             if getgenv().antiFlingThing then
                 getgenv().antiFlingThing:Disconnect()
                 getgenv().antiFlingThing = nil
+            end
+            antiKnockbackEnabled = false
+            if anti_knockback_connection then
+                anti_knockback_connection:Disconnect()
+                anti_knockback_connection = nil
             end
         end
     end,})
