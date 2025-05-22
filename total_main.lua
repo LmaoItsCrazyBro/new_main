@@ -3661,7 +3661,7 @@
 
                 JailCellConnection = workspace.DescendantAdded:Connect(function(descendant)
                     if not getgenv().JailCellCheckEnabled then return end
-                    if descendant:IsA("BasePart") and descendant.Name == LocalPlayer.Name.." JailCell" then
+                    if descendant:IsA("Model") and descendant.Name == LocalPlayer.Name.."'s JailCell" then
                         Rejoin()
                     end
                 end)
@@ -3694,7 +3694,7 @@
 
                 IceBlockConnection = workspace.DescendantAdded:Connect(function(descendant)
                     if not getgenv().IceBlockCheckEnabled then return end
-                    if descendant:IsA("Part") and descendant.Name == LocalPlayer.Name.." FreezeBlock" then
+                    if descendant:IsA("Part") and descendant.Name == LocalPlayer.Name.."'s FreezeBlock" then
                         Rejoin()
                     end
                 end)
