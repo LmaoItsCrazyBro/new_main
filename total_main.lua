@@ -708,7 +708,7 @@
     wait(1.7)
     RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
     wait(1.8)
-    RBXGeneral:DisplaySystemMessage("V-5.1.1")
+    RBXGeneral:DisplaySystemMessage("V-5.1.2")
     wait(1.5)
     RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
     wait(0.5)
@@ -1222,7 +1222,7 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.1.1 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.1.2 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -1248,7 +1248,7 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.1.1 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.1.2 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -3484,6 +3484,50 @@
     end
 
     wait(0.2)
+
+    local JailCellConnection
+    getgenv().JailCellCheckEnabled = false
+
+    local function DisableJailCellWatcher()
+        getgenv().JailCellCheckEnabled = false
+        if JailCellConnection then
+            JailCellConnection:Disconnect()
+            JailCellConnection = nil
+        end
+    end
+
+    getgenv().AntiJailCell = Tab16:CreateToggle({
+    Name = "Anti Jail Cell (HD Admin)",
+    CurrentValue = false,
+    Flag = "AntiJailCellConnection",
+    Callback = function(AntiJailHDAdmin)
+        if AntiJailHDAdmin then
+            local TeleportService = cloneref and cloneref(game:GetService("TeleportService")) or game:GetService("TeleportService")
+            local LocalPlayer = getgenv().LocalPlayer
+            local PlaceID = game.PlaceId
+            local JobID = game.JobId
+
+            getgenv().JailCellCheckEnabled = false
+
+            local function Rejoin()
+                TeleportService:TeleportToPlaceInstance(PlaceID, JobID, LocalPlayer)
+            end
+
+            local function EnableJailCellWatcher()
+                if JailCellConnection then return end
+                getgenv().JailCellCheckEnabled = true
+
+                JailCellConnection = workspace.DescendantAdded:Connect(function(descendant)
+                    if not getgenv().JailCellCheckEnabled then return end
+                    if descendant:IsA("Model") and descendant.Name == LocalPlayer.Name.." JailCell" then
+                        Rejoin()
+                    end
+                end)
+            end
+        else
+            DisableJailCellWatcher()
+        end
+    end,})
 
     getgenv().AntiFlingToggle = Tab16:CreateToggle({
     Name = "Anti Fling",
