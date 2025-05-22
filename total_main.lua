@@ -709,7 +709,7 @@
     wait(1.7)
     RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
     wait(1.8)
-    RBXGeneral:DisplaySystemMessage("V-5.1.2")
+    RBXGeneral:DisplaySystemMessage("V-5.1.4")
     wait(1.5)
     RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
     wait(0.5)
@@ -1223,7 +1223,7 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.1.2 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.1.4 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -1249,7 +1249,7 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.1.2 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.1.4 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -3713,7 +3713,7 @@
     local antiKnockbackEnabled = false
 
     getgenv().AntiFlingToggle = Tab16:CreateToggle({
-    Name = "Anti Fling",
+    Name = "Anti Fling (will slow you down for knockback)",
     CurrentValue = false,
     Flag = "AntiFlingAbsolutelyInsane",
     Callback = function(EnableAntiFlingScript)
@@ -4320,6 +4320,36 @@
         wait(0.1)
         bang_plr_bypass_off()
     end
+
+    getgenv().ViewRandomPlayer = Tab13:CreateToggle({
+    Name = "View/Spectate Random Player",
+    CurrentValue = false,
+    Flag = "SpectatingRandomPlr",
+    Callback = function(spectating_random)
+        if spectating_random then
+            local others = {}
+
+            for _, p in ipairs(getgenv().Players:GetPlayers()) do
+                local char = p.Character
+                if p ~= getgenv().LocalPlayer and char and char:FindFirstChild("Humanoid") then
+                    table.insert(others, p)
+                end
+            end
+
+            if #others > 0 then
+                local target = others[math.random(1, #others)]
+                local target_humanoid = target.Character and target.Character:FindFirstChildWhichIsA("Humanoid")
+
+                if target and target_humanoid then
+                    getgenv().Camera.CameraSubject = target_humanoid
+                end
+            else
+                warn("No valid players to teleport to.")
+            end
+        else
+            getgenv().Camera.CameraSubject = getgenv().Character or getgenv().Humanoid
+        end
+    end,})
 
     getgenv().TPToRandomPlayer = Tab13:CreateButton({
     Name = "TP To Random Player",
