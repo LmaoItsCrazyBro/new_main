@@ -3496,6 +3496,17 @@
         end
     end
 
+    local IceBlockConnection
+    getgenv().IceBlockCheckEnabled = false
+
+    local function DisableIceWatcher()
+        getgenv().IceBlockCheckEnabled = false
+        if IceBlockConnection then
+            IceBlockConnection:Disconnect()
+            IceBlockConnection = nil
+        end
+    end
+
     getgenv().AntiJailCell = Tab16:CreateToggle({
     Name = "Anti Jail Cell (HD Admin)",
     CurrentValue = false,
@@ -3526,6 +3537,39 @@
             end
         else
             DisableJailCellWatcher()
+        end
+    end,})
+
+    getgenv().AntiIceBlock = Tab16:CreateToggle({
+    Name = "Anti Ice/Freeze (HD Admin)",
+    CurrentValue = false,
+    Flag = "AntiIceBlockConnection",
+    Callback = function(AntiIceHDAdmin)
+        if AntiIceHDAdmin then
+            local TeleportService = cloneref and cloneref(game:GetService("TeleportService")) or game:GetService("TeleportService")
+            local LocalPlayer = getgenv().LocalPlayer
+            local PlaceID = game.PlaceId
+            local JobID = game.JobId
+
+            getgenv().IceBlockCheckEnabled = false
+
+            local function Rejoin()
+                TeleportService:TeleportToPlaceInstance(PlaceID, JobID, LocalPlayer)
+            end
+
+            local function EnableIceWatcher()
+                if IceBlockConnection then return end
+                getgenv().IceBlockCheckEnabled = true
+
+                IceBlockConnection = workspace.DescendantAdded:Connect(function(descendant)
+                    if not getgenv().IceBlockCheckEnabled then return end
+                    if descendant:IsA("Model") and descendant.Name == LocalPlayer.Name.." FreezeBlock" then
+                        Rejoin()
+                    end
+                end)
+            end
+        else
+            DisableIceWatcher()
         end
     end,})
 
