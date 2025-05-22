@@ -3666,6 +3666,8 @@
                     end
                 end)
             end
+
+            EnableJailCellWatcher()
         else
             DisableJailCellWatcher()
         end
@@ -3699,6 +3701,8 @@
                     end
                 end)
             end
+
+            EnableIceWatcher()
         else
             DisableIceWatcher()
         end
