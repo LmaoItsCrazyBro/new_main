@@ -3573,7 +3573,7 @@
         end
     end,})
 
-    getgenv().AntiBlur_Univ = Tab16:CreateToggle({
+    getgenv().AntiTeleport_Univ = Tab16:CreateToggle({
     Name = "Anti Teleport",
     CurrentValue = false,
     Flag = "AntiTeleportToggleUniversal",
@@ -7900,6 +7900,24 @@
     CurrentValue = false,
     Flag = "flyScriptToggle",
     Callback = function(toggleTheFly)
+        if getgenv().antiFlingEnabled == true then
+            if getgenv().AntiFlingToggle then
+                getgenv().AntiFlingToggle:Set(false)
+                getgenv().notify("Alert:", "Turned off Anti Fling for 'Fly' to work properly.", 6)
+            else
+                return getgenv().notify("Error:", "Please disable 'Anti Fling' for 'Fly' to work properly", 6)
+            end
+        end
+        wait()
+        if getgenv().AntiTeleport == true then
+            if getgenv().AntiTeleport_Univ then
+                getgenv().AntiTeleport_Univ:Set(false)
+                getgenv().notify("Alert:", "Turned off Anti Teleport for 'Fly' to work properly.", 6)
+            else
+                return getgenv().notify("Error:", "Please disable 'Anti Teleport' for 'Fly' to work properly.", 6)
+            end
+        end
+
         getgenv().FLYING = false
         getgenv().QEfly = true
         wait(0.1)
