@@ -359,77 +359,6 @@
     getgenv().Humanoid = getgenv().Character:WaitForChild("Humanoid") or getgenv().Character:FindFirstChildWhichIsA("Humanoid") or getgenv().Character:FindFirstChild("Humanoid")
     getgenv().Head = getgenv().Character:WaitForChild("Head") or getgenv().Character:FindFirstChild("Head")
     wait(0.2)
-    if not getgenv().maps_loaded or getgenv().maps_loaded == false then
-        local function insert_id_asset(asset_ID, Parent)
-            local modelId = 'rbxassetid://'..asset_ID
-            local mapModel = loadstring("return game:GetObjects('" .. modelId .. "')[1]")()
-
-            if mapModel and mapModel:IsA("Model") then
-                mapModel.Parent = Parent
-            else
-                warn("Failed to load and insert Flames Hub | Crossroads Map Model.")
-            end
-        end
-        wait()
-        print("16")
-        insert_id_asset('85211877443756', game:GetService("Workspace"))
-        wait()
-        insert_id_asset('126578094071541', game:GetService("Workspace"))
-        wait()
-        --[[insert_id_asset('76940250202002', game:GetService("Workspace"))
-        wait()
-        insert_id_asset('108255747072763', game:GetService("Workspace"))--]]
-        --[[wait(1)
-        local PrisonFences = getgenv().Workspace:FindFirstChild("Prison_Life") and getgenv().Workspace.Prison_Life:FindFirstChild("Prison_Fences")
-        wait()
-        local function take_hit(hit)
-            if not getgenv().FenceDamageEnabled then return end
-            wait()
-            if hit and hit.Parent then
-                if hit.Parent == getgenv().Character or hit.Parent:FindFirstChild("Humanoid") == getgenv().Humanoid then
-                    getgenv().Humanoid:TakeDamage(10)
-                end
-            end
-        end
-
-        local function fence_damaging(state)
-            if state then
-                if not getgenv().Connection then
-                    getgenv().FenceDamageEnabled = true
-                    getgenv().Connection = {}
-                    
-                    for _, model in ipairs(PrisonFences:GetChildren()) do
-                        if model:IsA("Model") then
-                            for _, part in ipairs(model:GetDescendants()) do
-                                if part:IsA("BasePart") then
-                                    local conn = part.Touched:Connect(take_hit)
-                                    table.insert(getgenv().Connection, conn)
-                                end
-                            end
-                        end
-                    end
-                end
-            else
-                if getgenv().Connection then
-                    for _, conn in ipairs(getgenv().Connection) do
-                        conn:Disconnect()
-                        conn = nil
-                    end
-                    getgenv().Connection = nil
-                    getgenv().FenceDamageEnabled = false
-                end
-            end
-        end
-
-        fence_damaging(true)
-        wait()
-        getgenv().ToggleFenceDamage = toggleFenceDamage--]]
-        wait()
-        getgenv().maps_loaded = true
-    else
-        warn("Maps have already been loaded.")
-    end
-    wait()
     print("17")
     wait(0.2)
     
@@ -709,7 +638,7 @@
     wait(1.7)
     RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
     wait(1.8)
-    RBXGeneral:DisplaySystemMessage("V-5.1.4")
+    RBXGeneral:DisplaySystemMessage("V-5.1.8")
     wait(1.5)
     RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
     wait(0.5)
@@ -1223,7 +1152,7 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.1.4 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.1.8 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -1249,7 +1178,7 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.1.4 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.1.8 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -3476,7 +3405,7 @@
 
     getgenv().HD_FlyEnabled = false
     local FlyConnection
-    local speed = 40
+    local speed
 
     function DisableFlyScript()
         getgenv().HD_FlyEnabled = false
@@ -3499,16 +3428,29 @@
         end
     end
 
-    --[[getgenv().HDAdminFly = Tab2:CreateToggle({
+    getgenv().HDAdminFly = Tab2:CreateToggle({
     Name = "HD Admin Fly (FE!)",
     CurrentValue = false,
     Flag = "FlyHDAdmin",
     Callback = function(toggle_hd_fly)
         if toggle_hd_fly then
+            getgenv().notify("Note:", "E = Fly Up | Q = Fly Down.", 5)
             getgenv().HD_FlyEnabled = true
+            getgenv().HD_FlySpeed = 100
+            speed = getgenv().HD_FlySpeed
 
-            local MoveDirection = Vector3.zero
-            local UserInputService = game:GetService("UserInputService")
+            local Players = getgenv().Players
+            local RunService = getgenv().RunService
+            local UserInputService = getgenv().UserInputService
+            local Workspace = getgenv().Workspace
+
+            local LocalPlayer = getgenv().LocalPlayer
+            repeat task.wait() until LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+            local Character = getgenv().Character
+            local HRP = getgenv().HumanoidRootPart
+            local Humanoid = getgenv().Humanoid
+            local Camera = getgenv().Camera
 
             local KeysDown = {
                 W = false,
@@ -3522,25 +3464,19 @@
             UserInputService.InputBegan:Connect(function(input, gameProcessed)
                 if gameProcessed then return end
                 local key = input.KeyCode
-                if key == Enum.KeyCode.W then KeysDown.W = true end
-                if key == Enum.KeyCode.A then KeysDown.A = true end
-                if key == Enum.KeyCode.S then KeysDown.S = true end
-                if key == Enum.KeyCode.D then KeysDown.D = true end
-                if key == Enum.KeyCode.E then KeysDown.E = true end
-                if key == Enum.KeyCode.Q then KeysDown.Q = true end
+                if KeysDown[key.Name] ~= nil then
+                    KeysDown[key.Name] = true
+                end
             end)
 
             UserInputService.InputEnded:Connect(function(input)
                 local key = input.KeyCode
-                if key == Enum.KeyCode.W then KeysDown.W = false end
-                if key == Enum.KeyCode.A then KeysDown.A = false end
-                if key == Enum.KeyCode.S then KeysDown.S = false end
-                if key == Enum.KeyCode.D then KeysDown.D = false end
-                if key == Enum.KeyCode.E then KeysDown.E = false end
-                if key == Enum.KeyCode.Q then KeysDown.Q = false end
+                if KeysDown[key.Name] ~= nil then
+                    KeysDown[key.Name] = false
+                end
             end)
 
-            function GetInputDirection(cam)
+            local function GetInputDirection(cam)
                 local dir = Vector3.zero
                 if KeysDown.W then dir += cam.CFrame.LookVector end
                 if KeysDown.S then dir -= cam.CFrame.LookVector end
@@ -3548,41 +3484,42 @@
                 if KeysDown.A then dir -= cam.CFrame.RightVector end
                 if KeysDown.E then dir += cam.CFrame.UpVector end
                 if KeysDown.Q then dir -= cam.CFrame.UpVector end
-                return dir.Unit
+                return dir.Magnitude > 0 and dir.Unit or Vector3.zero
             end
 
-            function ToggleFly()
-                local hrp = getgenv().HumanoidRootPart
-                local humanoid = getgenv().Humanoid
-                local cam = getgenv().Camera
-
+            local function ToggleFly()
                 local bodyGyro = Instance.new("BodyGyro")
                 bodyGyro.MaxTorque = Vector3.new(1e9, 1e9, 1e9)
-                bodyGyro.P = 2000
-                bodyGyro.D = 50
-                bodyGyro.CFrame = hrp.CFrame
+                bodyGyro.P = 4000
+                bodyGyro.D = 150
+                bodyGyro.CFrame = HRP.CFrame
                 bodyGyro.Name = "ExecutorFlyGyro"
-                bodyGyro.Parent = hrp
+                bodyGyro.Parent = HRP
 
                 local bodyPos = Instance.new("BodyPosition")
                 bodyPos.MaxForce = Vector3.new(1e9, 1e9, 1e9)
                 bodyPos.P = 7500
-                bodyPos.D = 500
-                bodyPos.Position = hrp.Position
+                bodyPos.D = 1000
+                bodyPos.Position = HRP.Position
                 bodyPos.Name = "ExecutorFlyPosition"
-                bodyPos.Parent = hrp
+                bodyPos.Parent = HRP
 
-                humanoid.PlatformStand = true
+                Humanoid.PlatformStand = true
 
-                FlyConnection = getgenv().RunService.Heartbeat:Connect(function(dt)
-                    if not getgenv().HD_FlyEnabled then return end
+                FlyConnection = RunService.Heartbeat:Connect(function(dt)
+                    if not getgenv().HD_FlyEnabled then
+                        bodyGyro:Destroy()
+                        bodyPos:Destroy()
+                        Humanoid.PlatformStand = false
+                        FlyConnection:Disconnect()
+                        return
+                    end
 
-                    local dir = GetInputDirection(cam)
-                    if dir ~= dir then return end
+                    local direction = GetInputDirection(Camera)
+                    local move = direction * getgenv().HD_FlySpeed * dt
 
-                    bodyPos.Position = hrp.Position + (dir * getgenv().HD_FlySpeed * dt)
-
-                    bodyGyro.CFrame = CFrame.new(hrp.Position, hrp.Position + cam.CFrame.LookVector)
+                    bodyPos.Position += move
+                    bodyGyro.CFrame = CFrame.new(HRP.Position, HRP.Position + Camera.CFrame.LookVector)
                 end)
             end
 
@@ -3594,14 +3531,14 @@
 
     getgenv().HDAdminFly_Speed = Tab2:CreateSlider({
     Name = "HD Admin Fly Speed",
-    Range = {1, 300},
+    Range = {75, 300},
     Increment = 1,
     Suffix = "",
     CurrentValue = 50,
     Flag = "EditFlySpeedHDAdmin",
     Callback = function(HDAdminFlySpeed_Edit)
         speed = tonumber(HDAdminFlySpeed_Edit)
-    end,})--]]
+    end,})
 
     wait(0.1)
     getgenv().SendOwnNotification = Tab1:CreateInput({
@@ -3879,40 +3816,51 @@
     Flag = "AntiTeleportToggleUniversal",
     Callback = function(anti_teleport_toggle)
         if anti_teleport_toggle then
-            getgenv().AntiTPEnabled = false
-            getgenv().LastPosition = nil
-            getgenv().AntiTPConnection = nil
+            getgenv().AntiTeleport = true
+            getgenv().AntiTeleportConnection = nil
 
-            getgenv().ToggleAntiTP = function(state)
-                getgenv().AntiTPEnabled = state
+            local Players = getgenv().Players
+            local RunService = getgenv().RunService
+            local LocalPlayer = getgenv().LocalPlayer
+            repeat task.wait() until LocalPlayer and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 
-                if getgenv().AntiTPConnection then
-                    getgenv().AntiTPConnection:Disconnect()
-                    getgenv().AntiTPConnection = nil
+            local Character = getgenv().Character
+            local HRP = getgenv().HumanoidRootPart
+            local lastCFrame = HRP.CFrame
+
+            local maxDistance = 5
+            local checkInterval = 0.05
+
+            getgenv().AntiTeleportConnection = task.spawn(function()
+                while task.wait(checkInterval) do
+                    if not getgenv().AntiTeleport then
+                        lastCFrame = HRP.CFrame
+                        continue
+                    end
+
+                    if LocalPlayer.Character ~= Character then
+                        Character = LocalPlayer.Character
+                        HRP = Character:WaitForChild("HumanoidRootPart")
+                        lastCFrame = HRP.CFrame
+                    end
+
+                    if (HRP.Position - lastCFrame.Position).Magnitude > maxDistance then
+                        warn("[Anti-Teleport_DEBUG]: Teleport detected. Reverting.")
+                        pcall(function()
+                            HRP.CFrame = lastCFrame
+                        end)
+                    else
+                        lastCFrame = HRP.CFrame
+                    end
                 end
-
-                if state then
-                    getgenv().LastPosition = getgenv().HumanoidRootPart and getgenv().HumanoidRootPart.Position
-                    getgenv().AntiTPConnection = getgenv().RunService.Heartbeat:Connect(function(dt)
-                        if not getgenv().AntiTPEnabled then return end
-                        local root = getgenv().HumanoidRootPart
-                        if not root then return end
-                        local currentPos = root.Position
-                        local lastPos = getgenv().LastPosition
-                        if lastPos then
-                            local distance = (currentPos - lastPos).Magnitude
-                            if distance > (getgenv().Humanoid and getgenv().Humanoid.WalkSpeed or 16) * dt + 10 then
-                                getgenv().OnTeleportDetected = true
-                            end
-                        end
-                        getgenv().LastPosition = currentPos
-                    end)
-                end
-            end
-            wait(0.1)
-            getgenv().ToggleAntiTP(true)
+            end)
         else
-            getgenv().ToggleAntiTP(false)
+            getgenv().AntiTeleport = false
+
+            pcall(function()
+                task.cancel(getgenv().AntiTeleportConnection)
+                getgenv().AntiTeleportConnection = nil
+            end)
         end
     end,})
 
@@ -3965,12 +3913,14 @@
                 for _, con in ipairs(getgenv().AntiBlurConnections) do
                     con:Disconnect()
                 end
+
                 table.clear(getgenv().AntiBlurConnections)
 
                 if not getgenv().AntiBlurEnabled then return end
 
                 WatchForBlurRecursive(Camera)
                 WatchForBlurRecursive(Lighting)
+                WatchForBlurRecursive(Workspace)
 
                 local camChange = Workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
                     Camera = Workspace.CurrentCamera
@@ -8022,7 +7972,7 @@
 
     getgenv().Face_Bang_Speed = Tab16:CreateSlider({
     Name = "Face F**k Speed",
-    Range = {1, 60},
+    Range = {1, 100},
     Increment = 1,
     Suffix = "",
     CurrentValue = 1,
@@ -8033,7 +7983,7 @@
 
     getgenv().Distance_Face_Bang = Tab16:CreateSlider({
     Name = "Face F**k Distance",
-    Range = {1, 30},
+    Range = {1, 60},
     Increment = 1,
     Suffix = "",
     CurrentValue = 1,
@@ -14324,12 +14274,10 @@
         else
             GuiService:SendNotification({
                 Title = "Please wait...",
-                Text = "Hooking and injecting into this experience...",
+                Text = "Hooking and injecting into: "..tostring(game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name),
             })
             wait(0.8)
             if setfpscap then
-                setfpscap(1)
-                wait(0.5)
                 print("Injecting Flames Hub...")
                 wait(1)
                 getgenv().emoting_actions(0)
@@ -14340,6 +14288,8 @@
                 getgenv().output_already_viewed = true
                 wait(0.6)
                 setfpscap(999)
+                wait(0.2)
+                print("Done injecting Flames Hub.")
             end
         end
     end
@@ -14352,35 +14302,41 @@
                 Title = "Successful.",
                 Text = "Successfully injected into experience.",
             })
+            getgenv().seen_output_zeh = true
+            return 
         else
             GuiService:SendNotification({
                 Title = "Failure!",
                 Text = "Could not allocate memory to inject into!",
             })
+            getgenv().seen_output_zeh = true
+            return 
         end
-        wait()
-        local function random_hex()
-            local hex = "0x"
-            for i = 1, 8 do
-                hex = hex .. string.format("%X", math.random(0, 15))
+        
+        if getgenv().seen_output_zeh == false then
+            local function random_hex()
+                local hex = "0x"
+                for i = 1, 8 do
+                    hex = hex .. string.format("%X", math.random(0, 15))
+                end
+                return hex
             end
-            return hex
+            wait(0.2)
+            GuiService:SendNotification({
+                Title = "Please wait...",
+                Text = "Starting Watch-Dog Process...",
+            })
+            wait(0.3)
+            GuiService:SendNotification({
+                Title = "Success, Returned:",
+                Text = tostring(random_hex()),
+            })
+            wait(0.1)
+            GuiService:SendNotification({
+                Title = "Initialized!",
+                Text = "We will now provide performance as well whilst you play.",
+            })
+            wait(0.1)
+            getgenv().seen_output_zeh = true
         end
-        wait(0.2)
-        GuiService:SendNotification({
-            Title = "Please wait...",
-            Text = "Starting Watch-Dog Process...",
-        })
-        wait(0.3)
-        GuiService:SendNotification({
-            Title = "Success, Returned:",
-            Text = tostring(random_hex()),
-        })
-        wait(0.1)
-        GuiService:SendNotification({
-            Title = "Initialized!",
-            Text = "We will now provide performance as well whilst you play.",
-        })
-        wait(0.1)
-        getgenv().seen_output_zeh = true
     end
