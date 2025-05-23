@@ -3754,96 +3754,72 @@
     local antiKnockbackEnabled = false
 
     getgenv().AntiFlingToggle = Tab16:CreateToggle({
-    Name = "Anti Fling (will slow you down for knockback)",
+    Name = "Anti Fling",
     CurrentValue = false,
     Flag = "AntiFlingAbsolutelyInsane",
     Callback = function(EnableAntiFlingScript)
         if EnableAntiFlingScript then
             getgenv().antiFlingEnabled = true
-            getgenv().antiFlingThing = nil
+            getgenv().antiKnockbackEnabled = true
 
-            local dudes = getgenv().Players
-            local RunServ = getgenv().RunService
-            local step = RunServ.RenderStepped
-            local me = getgenv().LocalPlayer
-            local Players = dudes
-            local RunService = RunServ
-            local lp = me
-
-            local hrp
-            antiKnockbackEnabled = true
+            local RunService = getgenv().RunService
+            local Players = getgenv().Players
+            local lp = getgenv().LocalPlayer
 
             local function getHRP()
-                return getgenv().HumanoidRootPart or getgenv().Character:FindFirstChild("HumanoidRootPart")
+                local char = getgenv().Character
+                return char and char:FindFirstChild("HumanoidRootPart") or getgenv().HumanoidRootPart
+            end
+
+            local function cleanUpForces()
+                local hrp = getHRP()
+                if not hrp then return end
+
+                for _, obj in ipairs(hrp:GetChildren()) do
+                    if obj:IsA("BodyMover") or obj:IsA("VectorForce") or obj:IsA("Torque") or obj:IsA("LinearVelocity") then
+                        obj:Destroy()
+                    end
+                end
             end
 
             local function onHeartbeat()
-                if not antiKnockbackEnabled then return end
+                if not (getgenv().antiKnockbackEnabled or getgenv().antiFlingEnabled) then return end
 
-                hrp = getHRP()
-                if hrp then
-                    hrp.Velocity = Vector3.zero
-                    hrp.AssemblyLinearVelocity = Vector3.zero
+                local hrp = getHRP()
+                local humanoid = lp.Character and lp.Character:FindFirstChildWhichIsA("Humanoid")
+                if not hrp or not humanoid then return end
+
+                local maxSpeed = 45
+                local maxAngularSpeed = 60
+
+                if hrp.Velocity.Magnitude > maxSpeed then
+                    hrp.Velocity = hrp.Velocity.Unit * maxSpeed
+                end
+
+                if hrp.AssemblyLinearVelocity.Magnitude > maxSpeed then
+                    hrp.AssemblyLinearVelocity = hrp.AssemblyLinearVelocity.Unit * maxSpeed
+                end
+
+                if hrp.RotVelocity.Magnitude > maxAngularSpeed then
                     hrp.RotVelocity = Vector3.zero
+                end
+
+                if hrp.AssemblyAngularVelocity.Magnitude > maxAngularSpeed then
                     hrp.AssemblyAngularVelocity = Vector3.zero
-
-                    for _, v in ipairs(lp.Character:GetDescendants()) do
-                        if v:IsA("BodyVelocity") or v:IsA("BodyPosition") or v:IsA("VectorForce") or v:IsA("LinearVelocity") then
-                            v:Destroy()
-                        end
-                    end
                 end
+
+                if humanoid.PlatformStand then
+                    humanoid.PlatformStand = false
+                end
+
+                cleanUpForces()
             end
 
+            if anti_knockback_connection then
+                anti_knockback_connection:Disconnect()
+            end
+            wait(0.2)
             anti_knockback_connection = RunService.Heartbeat:Connect(onHeartbeat)
-
-            local function doAntiFling()
-                if getgenv().antiFlingThing then
-                    getgenv().antiFlingThing:Disconnect()
-                    getgenv().antiFlingThing = nil
-                end
-
-                getgenv().antiFlingThing = step:Connect(function()
-                    if not getgenv().antiFlingEnabled then
-                        if getgenv().antiFlingThing then
-                            getgenv().antiFlingThing:Disconnect()
-                            getgenv().antiFlingThing = nil
-                        end
-                        return
-                    end
-
-                    local body = getgenv().Character or me.Character
-                    local core = getgenv().HumanoidRootPart or body and body:FindFirstChild("HumanoidRootPart")
-                    local mind = getgenv().Humanoid or body and body:FindFirstChildWhichIsA("Humanoid")
-                    if not core or not mind then return end
-
-                    for _, obj in ipairs(core:GetChildren()) do
-                        if obj:IsA("BodyMover") or obj:IsA("VectorForce") or obj:IsA("AlignPosition") or obj:IsA("LinearVelocity") or obj:IsA("Torque") then
-                            obj:Destroy()
-                        end
-                    end
-
-                    local maxSpeed = 100
-                    local velocity = core.Velocity
-                    if velocity.Magnitude > maxSpeed then
-                        core.Velocity = Vector3.new(
-                            math.clamp(velocity.X, -maxSpeed, maxSpeed),
-                            math.clamp(velocity.Y, -75, 75),
-                            math.clamp(velocity.Z, -maxSpeed, maxSpeed)
-                        )
-                    end
-
-                    if core.RotVelocity.Magnitude > 75 then
-                        core.RotVelocity = Vector3.zero
-                    end
-
-                    if mind.PlatformStand then
-                        mind.PlatformStand = false
-                    end
-                end)
-            end
-
-            doAntiFling()
         else
             getgenv().antiFlingEnabled = false
 
