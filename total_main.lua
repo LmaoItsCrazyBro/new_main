@@ -1883,7 +1883,7 @@
                 child.Reflectance = 0
             elseif child:IsA("Texture") then
                 child:Destroy()
-            elseif child:IsA("ParticleEmitter") or child:IsA("Fire") or child:IsA("Smoke") then
+            elseif child:IsA("ParticleEmitter") or child:IsA("Smoke") then
                 child.Enabled = false
             elseif child:IsA("Explosion") then
                 child.Visible = false
