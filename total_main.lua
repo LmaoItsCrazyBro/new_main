@@ -3434,7 +3434,7 @@
     Flag = "FlyHDAdmin",
     Callback = function(toggle_hd_fly)
         if toggle_hd_fly then
-            getgenv().notify("Note:", "E = Fly Up | Q = Fly Down.", 5)
+            getgenv().notify("Note:", "E = Fly Up | Q = Fly Down.", 10)
             getgenv().HD_FlyEnabled = true
             getgenv().HD_FlySpeed = 100
             speed = getgenv().HD_FlySpeed
