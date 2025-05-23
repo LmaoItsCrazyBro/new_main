@@ -9430,11 +9430,9 @@
     end
 
     getgenv().ChatBypassBest = Tab4:CreateButton({
-    Name = "Chat Bypass (UserCreation, not up rn)",
+    Name = "Anti Chat Log/Anti Screenshot",
     Callback = function()
-        --loadstring(game:HttpGet("https://raw.githubusercontent.com/1price/usercreation/refs/heads/main/UserCreation.lua", true))()
-        getgenv().notify("Error:", "The library would close and you would have to rejoin.", 6)
-        return getgenv().notify("[Read]:", "Usercreation bypassing is temporarily disabled.", 6)
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/AnthonyIsntHere/anthonysrepository/main/scripts/AntiChatLogger.lua", true))()
     end,})
     wait(0.2)
     local textChatService = cloneref and cloneref(game:GetService("TextChatService")) or game:GetService("TextChatService")
@@ -9477,14 +9475,13 @@
     getgenv().ClearChatMsgs = Tab4:CreateButton({
     Name = "Clear Chat Messages",
     Callback = function()
-        getgenv().sending_async(".")
-        task.wait(0.2)
-        getgenv().sending_async(".")
-        task.wait(0.2)
-        getgenv().sending_async(".")
-        task.wait(0.2)
-        getgenv().sending_async(".")
-        task.wait(0.2)
+        for i = 1, 5 do
+            getgenv().sending_async(".")
+        end
+        for i = 1, 300 do
+            getgenv().Players:Chat("???????????")
+        end
+        task.wait(0.3)
         getgenv().sending_async("/cls")
     end,})
 
