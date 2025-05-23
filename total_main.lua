@@ -2169,11 +2169,13 @@
         warn("Did not load Booth's stuff [1].")
     end
 
-    getgenv().FreeReanimationGUI = Tab1:CreateButton({
-    Name = "Free Reanimations GUI (Best Anim Speed = 110-125)",
-    Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/EnterpriseExperience/MicUpSource/refs/heads/main/OpenSource_Reanim_Free.lua'))()
-    end,})
+    if game.PlaceId == 6884319169 or game.PlaceId == 15546218972 then
+        getgenv().FreeReanimationGUI = Tab1:CreateButton({
+        Name = "Free Reanimations GUI (Best Anim Speed = 110-125)",
+        Callback = function()
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/EnterpriseExperience/MicUpSource/refs/heads/main/OpenSource_Reanim_Free.lua'))()
+        end,})
+    end
 
     getgenv().AntiVoidPlayer = Tab2:CreateToggle({
     Name = "Anti Void Baseplate (Goes under Character)",
