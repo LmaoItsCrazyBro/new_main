@@ -2491,68 +2491,116 @@
     Flag = "ToggleAntiVoidBasePlate",
     Callback = function(antiVoidFall)
         if antiVoidFall then
-            getgenv().anti_void_player = true
+            getgenv().keepMyPlateOn = true 
+            getgenv().plateBelowMeOffset = -6
+            getgenv().letItFollow = true
 
-            local Workspace = cloneref and cloneref(game:GetService("Workspace")) or game:GetService("Workspace")
-            local Players = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
-            local LocalPlayer = Players.LocalPlayer
-            local player = LocalPlayer or Players.LocalPlayer
-            local function return_correct_char()
-                local character = player.Character or player.CharacterAdded:Wait()
-                while character:FindFirstChild("Humanoid") and character.Humanoid.Health <= 0 do
-                    character = player.CharacterAdded:Wait()
+            local wrkspace = cloneref and cloneref(game:GetService("Workspace")) or game:GetService("Workspace")
+            local plyrs = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
+            local uis = cloneref and cloneref(game:GetService("UserInputService")) or game:GetService("UserInputService")
+            local me = plyrs.LocalPlayer
+
+            local floatSpeed = 0.2
+            local upPressed = false
+            local downPressed = false
+
+            local function getMyCharacter()
+                local char = me.Character or me.CharacterAdded:Wait()
+                while char:FindFirstChild("Humanoid") and char.Humanoid.Health <= 0 do
+                    char = me.CharacterAdded:Wait()
                 end
-                return character
+                return char
             end
-            
-            local function createBaseplate()
-                local baseplate = Instance.new("Part")
-                baseplate.Name = "ANTI_VOID_BASEPLATE"
-                baseplate.Size = Vector3.new(20, 1, 20)
-                baseplate.Anchored = true
-                baseplate.CanCollide = true
-                baseplate.Material = Enum.Material.Air
-                baseplate.Color = Color3.fromRGB(107, 50, 124)
-                baseplate.Transparency = 0.6
-                baseplate.Parent = Workspace:FindFirstChild("PartStorage")
-                return baseplate
-            end
-            
-            local function updateBaseplate()
-                local baseplate = createBaseplate()
-                local initialY = nil
 
-                while getgenv().anti_void_player == true do
-                    local character = return_correct_char()
-                    local rootPart = character and character:FindFirstChild("HumanoidRootPart")
-                    if rootPart then
-                        if not initialY then
-                            initialY = rootPart.Position.Y - rootPart.Size.Y / 2 - baseplate.Size.Y / 2
+            local function putThingUnderMe()
+                if getgenv().myPlateThingy then
+                    getgenv().myPlateThingy:Destroy()
+                end
+
+                local char = getgenv().Character
+                local root = char:FindFirstChild("HumanoidRootPart")
+                if not root then return end
+
+                local flatThing = Instance.new("Part")
+                flatThing.Name = "ANTI_VOID_BASEPLATE"
+                flatThing.Size = Vector3.new(20, 1, 20)
+                flatThing.Anchored = true
+                flatThing.CanCollide = true
+                flatThing.Material = Enum.Material.SmoothPlastic
+                flatThing.Color = Color3.fromRGB(107, 50, 124)
+                flatThing.Transparency = 0.6
+
+                flatThing.Position = root.Position + Vector3.new(0, getgenv().plateBelowMeOffset or -6, 0)
+                flatThing.Parent = workspace
+
+                getgenv().myPlateThingy = flatThing
+                return flatThing
+            end
+
+            uis.InputBegan:Connect(function(input, gameProcessed)
+                if gameProcessed then return end
+                if input.KeyCode == Enum.KeyCode.E then
+                    upPressed = true
+                elseif input.KeyCode == Enum.KeyCode.Q then
+                    downPressed = true
+                end
+            end)
+
+            uis.InputEnded:Connect(function(input)
+                if input.KeyCode == Enum.KeyCode.E then
+                    upPressed = false
+                elseif input.KeyCode == Enum.KeyCode.Q then
+                    downPressed = false
+                end
+            end)
+
+            local function keepItInPlace()
+                local plate = putThingUnderMe()
+
+                while getgenv().keepMyPlateOn do
+                    local char = getMyCharacter()
+                    local root = char and char:FindFirstChild("HumanoidRootPart")
+                    if root and plate then
+                        if getgenv().letItFollow then
+                            if upPressed then
+                                getgenv().plateBelowMeOffset = getgenv().plateBelowMeOffset + floatSpeed
+                            elseif downPressed then
+                                getgenv().plateBelowMeOffset = getgenv().plateBelowMeOffset - floatSpeed
+                            end
+
+                            local howFar = getgenv().plateBelowMeOffset
+                            plate.Position = Vector3.new(
+                                root.Position.X,
+                                root.Position.Y + howFar,
+                                root.Position.Z
+                            )
                         end
-                        local newPos = Vector3.new(rootPart.Position.X, initialY, rootPart.Position.Z)
-                        baseplate.Position = newPos
                     end
                     task.wait(0.04)
                 end
+
+                if plate then
+                    plate:Destroy()
+                end
             end
-            
-            updateBaseplate()
+
+            task.spawn(keepItInPlace)
         else
-            getgenv().anti_void_player = false
-            getgenv().anti_void_player = false
-            wait(0.3)
-            if not getgenv().Workspace:FindFirstChild("PartStorage"):FindFirstChild("ANTI_VOID_BASEPLATE") then
-                return getgenv().notify("Passed.", "Anti Void Part was already destroyed.", 5)
-            else
-                getgenv().Workspace:FindFirstChild("PartStorage"):FindFirstChild("ANTI_VOID_BASEPLATE"):Destroy()
+            getgenv().keepMyPlateOn = false 
+            if getgenv().myPlateThingy then
+                getgenv().myPlateThingy:Destroy() 
+                getgenv().myPlateThingy = nil 
             end
+            getgenv().letItFollow = false
         end
     end,})
     wait(0.2)
     if getgenv().Workspace:FindFirstChild("ANTI_VOID_BASEPLATE") then
         getgenv().AntiVoidPlayer:Set(false)
-        getgenv().anti_void_player = false
-        getgenv().Workspace:FindFirstChild("PartStorage"):FindFirstChild("ANTI_VOID_BASEPLATE"):Destroy()
+        getgenv().keepMyPlateOn = false
+        getgenv().Character:FindFirstChild("ANTI_VOID_BASEPLATE"):Destroy()
+        getgenv().myPlateThingy = nil
+        getgenv().letItFollow = false
     end
     wait(0.1)
     getgenv().AntiVoidTransparency = Tab2:CreateSlider({ 
@@ -2563,10 +2611,7 @@
     CurrentValue = 0.6,
     Flag = "SlidingTransBasePlate",
     Callback = function(transBasePlate)
-        local Workspace = getgenv().Workspace
-        local PartStorage = Workspace:FindFirstChild("PartStorage")
-        wait(0.3)
-        local Baseplate_AntiVoid = PartStorage:FindFirstChild("ANTI_VOID_BASEPLATE")
+        local Baseplate_AntiVoid = getgenv().myPlateThingy
 
         Baseplate_AntiVoid.Transparency = transBasePlate
     end,})
@@ -2576,10 +2621,7 @@
     Color = Color3.fromRGB(107, 50, 124),
     Flag = "PickThatBasePlateColor",
     Callback = function(AntiVoid_Color)
-        local Workspace = getgenv().Workspace
-        local PartStorage = Workspace:FindFirstChild("PartStorage")
-        wait(0.2)
-        local Baseplate_AntiVoid = PartStorage:FindFirstChild("ANTI_VOID_BASEPLATE")
+        local Baseplate_AntiVoid = getgenv().myPlateThingy
         
         Baseplate_AntiVoid.Color = AntiVoid_Color
     end,})
@@ -2596,9 +2638,8 @@
             
             local TweenService = getgenv().TweenService
             local Workspace = getgenv().Workspace
-            
             local PartStorage = Workspace:FindFirstChild("PartStorage")
-            local Baseplate_AntiVoid = PartStorage and PartStorage:FindFirstChild("ANTI_VOID_BASEPLATE")
+            local Baseplate_AntiVoid = getgenv().myPlateThingy
             
             if not Baseplate_AntiVoid then
                 getgenv().RainbowAntiVoidBasePlate:Set(false)
