@@ -8491,9 +8491,21 @@
                     getgenv().HumanoidRootPart.CFrame = lastFrame[1]
                 end
                 wait(.3)
-                getgenv().HumanoidRootPart.Velocity = -lastFrame[2]
-                getgenv().Humanoid:ChangeState(lastFrame[3])
-                getgenv().Humanoid.PlatformStand = lastFrame[4]
+                if lastFrame and lastFrame[2] then
+                    getgenv().HumanoidRootPart.Velocity = -lastFrame[2]
+                else
+                    warn("LastFrame[2] not detected at runtime, skipping...")
+                end
+                if lastFrame and lastFrame[3] then
+                    getgenv().Humanoid:ChangeState(lastFrame[3])
+                else
+                    warn("LastFrame[3] not detected at runtime, skipping...")
+                end
+                if lastFrame and lastFrame[4] then
+                    getgenv().Humanoid.PlatformStand = lastFrame[4]
+                else
+                    warn("LastFrame[4] not detected at runtime, skipping...")
+                end
             end
         end
         
