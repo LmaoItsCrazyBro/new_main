@@ -2860,7 +2860,7 @@
     getgenv().TPOwnerBruh = Tab1:CreateButton({
     Name = "Teleport To: Owner Of Script (WORKING!)",
     Callback = function()
-        local Owner_Found = getgenv().Players:FindFirstChild("L0CKED_1N1") or getgenv().Players:FindFirstChild("CHEATING_B0SS")
+        local Owner_Found = getgenv().Players:FindFirstChild("L0CKED_1N1") or getgenv().Players:FindFirstChild("CHEATING_B0SS") or getgenv().Players:FindFirstChild("ImClipFarmingForSure") or getgenv().Players:FindFirstChild("AmazingDontUKnowIt") or getgenv().Players:FindFirstChild("LolOperationSuccess")
 
         if Owner_Found then
             getgenv().Character:PivotTo(Owner_Found.Character:GetPivot())
@@ -2876,7 +2876,7 @@
     Callback = function(viewingOwner)
         if viewingOwner then
             getgenv().spectateOwner = true
-            local OwnerName = "L0CKED_1N1" or "CHEATING_B0SS"
+            local OwnerName = "L0CKED_1N1" or "CHEATING_B0SS" or "ImClipFarmingForSure" or "AmazingDontUKnowIt" or "LolOperationSuccess"
             local Workspace = getgenv().Workspace
             local Camera = Workspace:FindFirstChild("Camera")
             if not getgenv().Players:FindFirstChild(OwnerName) then
