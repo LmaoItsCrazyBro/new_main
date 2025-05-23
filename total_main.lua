@@ -638,7 +638,7 @@
     wait(1.7)
     RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
     wait(1.8)
-    RBXGeneral:DisplaySystemMessage("V-5.1.8")
+    RBXGeneral:DisplaySystemMessage("V-5.2.2")
     wait(1.5)
     RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
     wait(0.5)
@@ -913,7 +913,7 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.1.8 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.2.2 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -939,7 +939,7 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.1.8 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.2.2 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
