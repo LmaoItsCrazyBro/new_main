@@ -638,7 +638,7 @@
     wait(1.7)
     RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
     wait(1.8)
-    RBXGeneral:DisplaySystemMessage("V-5.2.7")
+    RBXGeneral:DisplaySystemMessage("V-5.2.9")
     wait(1.5)
     RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
     wait(0.5)
@@ -913,7 +913,7 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.2.7 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.2.9 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -939,7 +939,7 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.2.7 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.2.9 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -3666,6 +3666,47 @@
             end
         end
     end,})
+
+    if game.PlaceId == 83312952548612 then
+        getgenv().FastTogglePart = Tab16:CreateToggle({
+        Name = "Toggle Obby Button [Fast]",
+        CurrentValue = false,
+        Flag = "FastToggleButtonForObby",
+        Callback = function(fast_toggling_obby)
+            if fast_toggling_obby then
+                local Workspace = getgenv().Workspace
+                local Player = getgenv().LocalPlayer
+                local Character = getgenv().Character
+                local HumanoidRootPart = getgenv().HumanoidRootPart
+                getgenv().Gudock_Part_Touching = true
+
+                if not Workspace:FindFirstChild("Gudock") then
+                    getgenv().FastTogglePart:Set(false)
+                    return getgenv().notify("Failure:", "Gudock button for the obby doesn't seem to exist.", 5)
+                end
+            
+                local Gudock_Part = Workspace:FindFirstChild("Gudock")
+
+                if Gudock_Part then
+                    while getgenv().Gudock_Part_Touching == true do
+                    wait()
+                        for _, v in ipairs(Gudock_Part:GetDescendants()) do
+                            if v:IsA("TouchTransmitter") and firetouchinterest then
+                                firetouchinterest(v.Parent, HumanoidRootPart, 0)
+                                task.wait(0.2)
+                                firetouchinterest(v.Parent, HumanoidRootPart, 1)
+                            end
+                        end
+                    end
+                end
+            else
+                getgenv().Gudock_Part_Touching = false
+                getgenv().Gudock_Part_Touching = false
+            end
+        end,})
+    else
+        warn("You do not seem to be on Troll Is A Pinning Tower 2, not running 'Toggle Obby Button [Fast]'.")
+    end
 
     getgenv().AntiTeleport_Univ = Tab16:CreateToggle({
     Name = "Anti Teleport",
