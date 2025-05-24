@@ -14,6 +14,7 @@ end
 local JailCellConnection
 getgenv().JailCellCheckEnabled = false
 local IceBlockConnection
+local FreezeCheckConnection
 getgenv().IceBlockCheckEnabled = false
 task.wait()
 local function EnableJailCellWatcher()
@@ -35,6 +36,15 @@ local function EnableIceWatcher()
     IceBlockConnection = workspace.DescendantAdded:Connect(function(descendant)
         if not getgenv().IceBlockCheckEnabled then return end
         if descendant:IsA("Part") and descendant.Name == LocalPlayer.Name.."'s FreezeBlock" then
+            Rejoin()
+        end
+    end)
+
+    FreezeCheckConnection = RunService.Heartbeat:Connect(function()
+        if not getgenv().IceBlockCheckEnabled then return end
+
+        local character = LocalPlayer.Character
+        if character and IsFullyFrozen() then
             Rejoin()
         end
     end)
