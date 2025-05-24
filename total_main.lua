@@ -3689,14 +3689,14 @@
 
                 if Gudock_Part then
                     while getgenv().Gudock_Part_Touching == true do
-                    task.wait()
                         for _, v in ipairs(Gudock_Part:GetDescendants()) do
                             if v:IsA("TouchTransmitter") and firetouchinterest then
                                 firetouchinterest(v.Parent, HumanoidRootPart, 0)
-                                task.wait(.1)
+                                task.wait()
                                 firetouchinterest(v.Parent, HumanoidRootPart, 1)
                             end
                         end
+                        task.wait()
                     end
                 end
             else
