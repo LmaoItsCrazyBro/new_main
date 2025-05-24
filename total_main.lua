@@ -3191,6 +3191,9 @@
         end
     end
 
+    local anti_fling_toggle_saved = false
+    local anti_teleport_toggle_saved = false
+    wait(0.2)
     getgenv().HDAdminFly = Tab2:CreateToggle({
     Name = "HD Admin Fly (FE!)",
     CurrentValue = false,
@@ -3198,21 +3201,27 @@
     Callback = function(toggle_hd_fly)
         if toggle_hd_fly then
             if getgenv().antiFlingEnabled == true then
+                anti_fling_toggle_saved = true
                 if getgenv().AntiFlingToggle then
                     getgenv().AntiFlingToggle:Set(false)
                     getgenv().notify("Alert:", "Turned off Anti Fling for 'Fly' to work properly.", 6)
                 else
                     return getgenv().notify("Error:", "Please disable 'Anti Fling' for 'Fly' to work properly", 6)
                 end
+            else
+                anti_fling_toggle_saved = false
             end
             wait()
             if getgenv().AntiTeleport == true then
+                anti_teleport_toggle_saved = true
                 if getgenv().AntiTeleport_Univ then
                     getgenv().AntiTeleport_Univ:Set(false)
                     getgenv().notify("Alert:", "Turned off Anti Teleport for 'Fly' to work properly.", 6)
                 else
                     return getgenv().notify("Error:", "Please disable 'Anti Teleport' for 'Fly' to work properly.", 6)
                 end
+            else
+                anti_fling_toggle_saved = false
             end
 
             getgenv().notify("Note:", "E = Fly Up | Q = Fly Down.", 10)
@@ -3307,6 +3316,21 @@
             ToggleFly()
         else
             DisableFlyScript()
+            wait(0.2)
+            if anti_fling_toggle_saved == true then
+                if getgenv().AntiFlingToggle then
+                    getgenv().notify("Alert:", "Turning 'Anti Fling' back on, it was enabled before.", 5)
+                    getgenv().AntiFlingToggle:Set(true)
+                    anti_fling_toggle_saved = false
+                end
+            end
+            if anti_teleport_toggle_saved == true then
+                if getgenv().AntiTeleport_Univ then
+                    getgenv().notify("Alert:", "Turning 'Anti Teleport' back on, it was enabled before.", 5)
+                    getgenv().AntiTeleport_Univ:Set(true)
+                    anti_teleport_toggle_saved = false
+                end
+            end
         end
     end,})
 
@@ -7919,6 +7943,7 @@
     Flag = "flyScriptToggle",
     Callback = function(toggleTheFly)
         if getgenv().antiFlingEnabled == true then
+            anti_fling_toggle_saved = true
             if getgenv().AntiFlingToggle then
                 getgenv().AntiFlingToggle:Set(false)
                 getgenv().notify("Alert:", "Turned off Anti Fling for 'Fly' to work properly.", 6)
@@ -7928,6 +7953,7 @@
         end
         wait()
         if getgenv().AntiTeleport == true then
+            anti_teleport_toggle_saved = true
             if getgenv().AntiTeleport_Univ then
                 getgenv().AntiTeleport_Univ:Set(false)
                 getgenv().notify("Alert:", "Turned off Anti Teleport for 'Fly' to work properly.", 6)
@@ -8055,8 +8081,24 @@
             local player = game:GetService("Players").LocalPlayer
             local character = player.Character or player.CharacterAdded:Wait()
 
-            local rootPart = character:WaitForChild("HumanoidRootPart")
-            local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+            local rootPart = getgenv().HumanoidRootPart or character:WaitForChild("HumanoidRootPart")
+            local humanoid = getgenv().Humanoid or character:FindFirstChildWhichIsA("Humanoid")
+
+            if anti_teleport_toggle_saved == true then
+                if getgenv().AntiFlingToggle then
+                    getgenv().notify("Alert:", "Turning 'Anti Teleport' back on, it was enabled before.", 5)
+                    getgenv().AntiFlingToggle:Set(true)
+                    anti_fling_toggle_saved = false
+                end
+            end
+
+            if anti_fling_toggle_saved == true then
+                if getgenv().AntiFlingToggle then
+                    getgenv().notify("Alert:", "Turning 'Anti Fling' back on, it was enabled before.", 5)
+                    getgenv().AntiFlingToggle:Set(true)
+                    anti_fling_toggle_saved = false
+                end
+            end
 
             if getgenv().HumanoidRootPart:FindFirstChild("Gyro-Fly") then
                 getgenv().HumanoidRootPart:FindFirstChild("Gyro-Fly"):Destroy()
