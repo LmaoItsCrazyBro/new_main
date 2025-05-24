@@ -6,10 +6,13 @@ task.wait(0.1)
 repeat wait() until LocalPlayer.Character:FindFirstChild("Humanoid") and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
 local PlaceID = game.PlaceId
 local JobID = game.JobId
+warn("[INFORMATION_DEBUG]: Initializing automatic Anti-Teleport and Anti-Ice scripts...")
 
 local function Rejoin()
     TeleportService:TeleportToPlaceInstance(PlaceID, JobID, LocalPlayer)
 end
+
+warn("[INFORMATION_DEBUG]: Preparing Ice, Freeze and Jail connections...")
 
 local JailCellConnection
 getgenv().JailCellCheckEnabled = false
@@ -50,5 +53,8 @@ local function EnableIceWatcher()
     end)
 end
 
+warn("[INFORMATION_DEBUG]: Toggling functions for Anti Ice/Freeze, and Jail scripts...")
+
 EnableJailCellWatcher()
 EnableIceWatcher()
+warn("[INFORMATION_DEBUG-LOG]: Successfully intialized and loaded Anti-Jail and Anti-Ice automatically.")
