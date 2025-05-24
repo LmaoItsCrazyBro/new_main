@@ -3429,7 +3429,12 @@
     getgenv().AddAutoAntiIceJailCell = Tab16:CreateButton({
     Name = "Auto-Run Anti Ice/Jail (Leave manually to stop)",
     Callback = function()
+        if getgenv().Loaded_Check_For_Anti_Ice_Jail then
+            return getgenv().notify("Heads Up:", "You already loaded auto-run anti ice/jail!", 6)
+        end
+        task.wait(0.2)
         getgenv().notify("Heads Up!:", "You MUST leave manually and rejoin to  this!", 5)
+        getgenv().Loaded_Check_For_Anti_Ice_Jail = true
         getgenv().LocalPlayer.OnTeleport:Connect(function(State)
             if (not getgenv().Anti_Ice_Jail_AutoRun) and getgenv().queueteleport then
                 getgenv().Anti_Ice_Jail_AutoRun = true
