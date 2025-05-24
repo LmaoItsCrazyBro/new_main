@@ -1,4 +1,5 @@
 local TeleportService = cloneref and cloneref(game:GetService("TeleportService")) or game:GetService("TeleportService")
+local RunService = cloneref and cloneref(game:GetService("RunService")) or game:GetService("RunService")
 repeat wait() until game.Players.LocalPlayer
 local LocalPlayer = game.Players.LocalPlayer
 LocalPlayer.CharacterAdded:Wait()
@@ -13,6 +14,15 @@ local function Rejoin()
 end
 
 warn("[INFORMATION_DEBUG]: Preparing Ice, Freeze and Jail connections...")
+
+LocalPlayer.OnTeleport:Connect(function(State)
+    if (not getgenv().Anti_Ice_Jail_AutoRun) and getgenv().queueteleport then
+        getgenv().Anti_Ice_Jail_AutoRun = true
+        queueteleport("loadstring(game:HttpGet(('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/anti_jail_ice_queue_teleport.lua')))()")
+    else
+        return getgenv().notify("Failure:", "Your executor does not support 'queueteleport'!", 6)
+    end
+end)
 
 local JailCellConnection
 getgenv().JailCellCheckEnabled = false
