@@ -7896,14 +7896,18 @@
     Flag = "toggleNoclipChar",
     Callback = function(noclip_toggle)
         function reset_collide(reset_bool)
-            if reset_bool == true then
+            if reset_bool == true and getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
                 getgenv().Character:FindFirstChild("HumanoidRootPart").CanCollide = true
                 getgenv().Character:FindFirstChild("LowerTorso").CanCollide = true
                 getgenv().Character:FindFirstChild("UpperTorso").CanCollide = true
-            elseif reset_bool == false then
+            elseif reset_bool == false and getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
                 getgenv().Character:FindFirstChild("HumanoidRootPart").CanCollide = false
                 getgenv().Character:FindFirstChild("LowerTorso").CanCollide = false
                 getgenv().Character:FindFirstChild("UpperTorso").CanCollide = false
+            elseif reset_bool == true and getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+                getgenv().HumanoidRootPart.CanCollide = true
+            elseif reset_bool == false and getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+                getgenv().HumanoidRootPart.CanCollide = false
             else
                 return warn("Invalid input BoolValue.")
             end
@@ -7912,7 +7916,7 @@
         if noclip_toggle then
             getgenv().ez_noclip_use = true
             while getgenv().ez_noclip_use == true do
-            wait()
+            task.wait()
                 reset_collide(false)
             end
         elseif not getgenv().Character and noclip_toggle then
