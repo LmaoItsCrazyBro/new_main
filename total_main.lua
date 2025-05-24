@@ -638,7 +638,7 @@
     wait(1.7)
     RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
     wait(1.8)
-    RBXGeneral:DisplaySystemMessage("V-5.2.2")
+    RBXGeneral:DisplaySystemMessage("V-5.2.5")
     wait(1.5)
     RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
     wait(0.5)
@@ -913,7 +913,7 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.2.2 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.2.5 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -939,7 +939,7 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.2.2 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.2.5 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -12544,6 +12544,10 @@
         local character = player.Character or player.CharacterAdded:Wait()
         local Animate = character:WaitForChild("Animate")
 
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
+
         if not Animate then return end
         
         getgenv().Humanoid.WalkSpeed = 0
@@ -12579,6 +12583,10 @@
         local character = player.Character or player.CharacterAdded:Wait()
         local Animate = character:WaitForChild("Animate")
 
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
+
         if not Animate then return end
 
         getgenv().Humanoid.WalkSpeed = 0
@@ -12613,6 +12621,10 @@
         local player = getgenv().LocalPlayer
         local character = getgenv().Character
         local Animate = character:WaitForChild("Animate")
+
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
 
         Rthro_Idle_1 = "10921259953"
         Rthro_Idle_2 = "10921258489"
@@ -12657,6 +12669,10 @@
         local character = player.Character or player.CharacterAdded:Wait()
         local Animate = character:WaitForChild("Animate")
 
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
+
         if not Animate then return end
 
         getgenv().Humanoid.WalkSpeed = 0
@@ -12691,6 +12707,10 @@
         local player = getgenv().LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local Animate = character:WaitForChild("Animate")
+
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
 
         if not Animate then return end
 
@@ -12727,6 +12747,10 @@
         local character = player.Character or player.CharacterAdded:Wait()
         local Animate = character:WaitForChild("Animate")
 
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
+
         if not Animate then return end
 
         getgenv().Humanoid.WalkSpeed = 0
@@ -12762,6 +12786,10 @@
         local character = player.Character or player.CharacterAdded:Wait()
         local Animate = character:WaitForChild("Animate")
 
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
+
         if not Animate then return end
 
         getgenv().Humanoid.WalkSpeed = 0
@@ -12796,6 +12824,10 @@
         local player = getgenv().LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
         local Animate = character:WaitForChild("Animate")
+        
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
 
         if not Animate then return end
         getgenv().Humanoid.WalkSpeed = 0
@@ -12826,6 +12858,9 @@
     end)
 
     create_Button(zombieAnim, "Zombie Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().Character:FindFirstChild("Animate")
         getgenv().Humanoid.WalkSpeed = 0
@@ -12853,6 +12888,9 @@
     end)
 
     create_Button(HeroAnim, "Hero Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().Character:FindFirstChild("Animate")
         getgenv().Humanoid.WalkSpeed = 0
@@ -12880,6 +12918,9 @@
     end)
 
     create_Button(vampireAnim, "Vampire Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().Character:FindFirstChild("Animate")
         getgenv().Humanoid.WalkSpeed = 0
@@ -12907,6 +12948,9 @@
     end)
 
     create_Button(mageAnim, "Mage Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().Character:FindFirstChild("Animate")
         getgenv().Humanoid.WalkSpeed = 0
@@ -12934,6 +12978,9 @@
     end)
 
     create_Button(ghostAnim, "(FE) Ghost Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().Character:FindFirstChild("Animate")
         getgenv().Humanoid.WalkSpeed = 0
@@ -12961,6 +13008,9 @@
     end)
 
     create_Button(elderAnim, "Elder Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().Character:FindFirstChild("Animate")
         getgenv().Humanoid.WalkSpeed = 0
@@ -12988,6 +13038,9 @@
     end)
 
     create_Button(LevitationAnim, "Levitation Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13015,6 +13068,9 @@
     end)
 
     create_Button(AstronautAnim, "Astronaut Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13042,6 +13098,9 @@
     end)
 
     create_Button(NinjaAnim, "Ninja Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13069,6 +13128,9 @@
     end)
 
     create_Button(WerewolfAnim, "Werewolf Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13096,6 +13158,9 @@
     end)
 
     create_Button(CartoonAnim, "Cartoon Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13123,6 +13188,9 @@
     end)
 
     create_Button(PirateAnim, "Pirate Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13150,6 +13218,9 @@
     end)
 
     create_Button(SneakyFEAnim, "(FE) Sneaky Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13177,6 +13248,9 @@
     end)
 
     create_Button(ToyAnim, "Toy Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13204,6 +13278,9 @@
     end)
 
     create_Button(KnightAnim, "Knight Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13231,6 +13308,9 @@
     end)
 
     create_Button(ConfidentFEAnim, "(FE) Confident Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13258,6 +13338,9 @@
     end)
 
     create_Button(PopstarFEAnim, "(FE) Popstar Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13285,6 +13368,9 @@
     end)
 
     create_Button(PrincessFEAnim, "(FE) Princess Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13312,6 +13398,9 @@
     end)
 
     create_Button(CowboyFEAnim, "(FE) Cowboy Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13339,6 +13428,9 @@
     end)
 
     create_Button(PatrolFEAnim, "(FE) Patrol Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().LocalPlayer.Character.Animate
         getgenv().Humanoid.WalkSpeed = 0
@@ -13366,6 +13458,9 @@
     end)
 
     create_Button(ZombieFEAnim, "(FE) Zombie Animation Package", function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You must be in R15 to use animation packages.", 6)
+        end
         wait(0.7)
         local Animate = getgenv().Character:FindFirstChild("Animate")
         getgenv().Humanoid.WalkSpeed = 0
