@@ -32,6 +32,8 @@ if game.PlaceId == 83312952548612 then
 
     warn("[INFORMATION_DEBUG]: Preparing Ice, Freeze and Jail connections...")
 
+    LocalPlayer.CharacterAdded:Wait()
+    task.wait()
     LocalPlayer.OnTeleport:Connect(function(State)
         if (not getgenv().Anti_Ice_Jail_AutoRun) and getgenv().queueteleport then
             getgenv().Anti_Ice_Jail_AutoRun = true
@@ -73,7 +75,8 @@ if game.PlaceId == 83312952548612 then
         FreezeCheckConnection = RunService.Heartbeat:Connect(function()
             if not getgenv().IceBlockCheckEnabled then return end
 
-            local character = LocalPlayer.Character
+            LocalPlayer.CharacterAdded:Wait()
+            local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
             if character and IsFullyFrozen() then
                 Rejoin()
             end
