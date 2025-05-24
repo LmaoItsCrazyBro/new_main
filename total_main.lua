@@ -638,7 +638,7 @@
     wait(1.7)
     RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
     wait(1.8)
-    RBXGeneral:DisplaySystemMessage("V-5.2.5")
+    RBXGeneral:DisplaySystemMessage("V-5.2.7")
     wait(1.5)
     RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
     wait(0.5)
@@ -913,7 +913,7 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.2.5 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.2.7 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -939,7 +939,7 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.2.5 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.2.7 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -3410,6 +3410,7 @@
         end
     end
 
+    local FreezeCheckConnection
     local IceBlockConnection
     getgenv().IceBlockCheckEnabled = false
 
@@ -3419,7 +3420,25 @@
             IceBlockConnection:Disconnect()
             IceBlockConnection = nil
         end
+        if FreezeCheckConnection then
+            FreezeCheckConnection:Disconnect()
+            FreezeCheckConnection = nil
+        end
     end
+
+    getgenv().AddAutoAntiIceJailCell = Tab16:CreateButton({
+    Name = "Auto-Run Anti Ice/Jail (Leave manually to stop)",
+    Callback = function()
+        getgenv().notify("Heads Up!:", "You MUST leave manually and rejoin to  this!", 5)
+        getgenv().LocalPlayer.OnTeleport:Connect(function(State)
+            if (not getgenv().Anti_Ice_Jail_AutoRun) and getgenv().queueteleport then
+                getgenv().Anti_Ice_Jail_AutoRun = true
+                queueteleport("loadstring(game:HttpGet(('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/anti_jail_ice_queue_teleport.lua')))()")
+            else
+                return getgenv().notify("Failure:", "Your executor does not support 'queueteleport'!", 6)
+            end
+        end)
+    end,})
 
     getgenv().AntiJailCell = Tab16:CreateToggle({
     Name = "Anti Jail Cell (HD Admin)",
@@ -3463,14 +3482,33 @@
     Callback = function(AntiIceHDAdmin)
         if AntiIceHDAdmin then
             local TeleportService = cloneref and cloneref(game:GetService("TeleportService")) or game:GetService("TeleportService")
-            local LocalPlayer = getgenv().LocalPlayer
+            local Players = getgenv().Players
+            local RunService = getgenv().RunService
+
+            local LocalPlayer = getgenv().LocalPlayer or Players.LocalPlayer
             local PlaceID = game.PlaceId
             local JobID = game.JobId
 
-            getgenv().IceBlockCheckEnabled = false
-
             local function Rejoin()
                 TeleportService:TeleportToPlaceInstance(PlaceID, JobID, LocalPlayer)
+            end
+
+            local function IsFullyFrozen()
+                local character = LocalPlayer.Character
+                if not character then return false end
+
+                local humanoid = character:FindFirstChildOfClass("Humanoid")
+                if not humanoid then return false end
+
+                for _, part in ipairs(character:GetDescendants()) do
+                    if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+                        if not part.Anchored then
+                            return false
+                        end
+                    end
+                end
+
+                return true
             end
 
             local function EnableIceWatcher()
@@ -3480,6 +3518,15 @@
                 IceBlockConnection = workspace.DescendantAdded:Connect(function(descendant)
                     if not getgenv().IceBlockCheckEnabled then return end
                     if descendant:IsA("Part") and descendant.Name == LocalPlayer.Name.."'s FreezeBlock" then
+                        Rejoin()
+                    end
+                end)
+
+                FreezeCheckConnection = RunService.Heartbeat:Connect(function()
+                    if not getgenv().IceBlockCheckEnabled then return end
+
+                    local character = LocalPlayer.Character
+                    if character and IsFullyFrozen() then
                         Rejoin()
                     end
                 end)
