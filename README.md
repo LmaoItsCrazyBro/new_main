@@ -5,5 +5,5 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_m
 
 **Infinite Premium**
 ```lua
-loadstring(game:HttpGet('https://raw.githubusercontent.com/EnterpriseExperience/crazyDawg/main/InfYieldOther.lua'))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/Infinite_Premium.lua'))()
 ```
