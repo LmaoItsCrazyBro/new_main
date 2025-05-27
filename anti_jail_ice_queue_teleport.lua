@@ -32,8 +32,6 @@ if game.PlaceId == 83312952548612 then
 
     warn("[INFORMATION_DEBUG]: Preparing Ice, Freeze and Jail connections...")
 
-    LocalPlayer.CharacterAdded:Wait()
-    task.wait()
     LocalPlayer.OnTeleport:Connect(function(State)
         if (not getgenv().Anti_Ice_Jail_AutoRun) and getgenv().queueteleport then
             getgenv().Anti_Ice_Jail_AutoRun = true
@@ -42,6 +40,8 @@ if game.PlaceId == 83312952548612 then
             return getgenv().notify("Failure:", "Your executor does not support 'queueteleport'!", 6)
         end
     end)
+
+    warn("[INFORMATION_DEBUG]: We have successfully initialized Teleport use for LocalPlayer.")
 
     local JailCellConnection
     getgenv().JailCellCheckEnabled = false
