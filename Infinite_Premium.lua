@@ -2762,7 +2762,7 @@ reference = (function()
   main.TopBar.Close.MouseButton1Click:Connect(function()
      main:TweenPosition(UDim2.new(0.5,-250,0,-500), "InOut", "Quart", 0.5, true, nil)
   end)
-  local inviteButton = main:FindFirstChild("ReleasesAndUpdatesButton",true)
+  local inviteButton = main:FindFirstChild("InviteButton",true)
   local lastPress = nil
   inviteButton.MouseButton1Click:Connect(function()
      if everyClipboard then
