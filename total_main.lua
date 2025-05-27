@@ -593,7 +593,7 @@
             local maxPartSize = 2048
             local material = Enum.Material.Asphalt
             local color = Color3.fromRGB(50, 50, 50)
-            local transparency = 1
+            local transparency = 0
             
             local function createPart(pos, partSize)
                 local part = Instance.new("Part")
@@ -638,7 +638,7 @@
     wait(1.7)
     RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
     wait(1.8)
-    RBXGeneral:DisplaySystemMessage("V-5.2.9")
+    RBXGeneral:DisplaySystemMessage("V-5.3.7")
     wait(1.5)
     RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
     wait(0.5)
@@ -663,7 +663,7 @@
     end
 
     if not Rayfield then
-        warn("[CRITICAL]: Failed to load Rayfield after multiple attempts.")
+        warn("[CRITICAL_ERROR]: Failed to load Rayfield after multiple attempts.")
     end
     wait(0.5)
     -- This can be used anytime while using the script by executing the following: getgenv().notify("Welcome", "Your content here.", 6)
@@ -913,7 +913,7 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.2.9 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.3.7 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -924,7 +924,7 @@
             Discord = {
                 Enabled = false,
                 Invite = "",
-                RememberJoins = false
+                RememberJoins = true
             },
             KeySystem = false,
             KeySettings = {
@@ -939,7 +939,7 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.2.9 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.3.7 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -3147,6 +3147,344 @@
         warn("Did not load these Booth tabs [2].")
     end
 
+    getgenv().WalkSpeedBypass = Tab1:CreateButton({
+    Name = "[AntiCheats]: WalkSpeed/JumpPower Bypass",
+    Callback = function()
+        if hookmetamethod then
+            getgenv().notify("Wait.", "We are initializing the WalkSpeed bypass...", 5)
+            wait(0.3)
+            local lp = game:FindService("Players").LocalPlayer
+            local hooks = {
+                walkspeed = 16,
+                jumppower = 50
+            }
+            local index
+            local newindex
+
+            index = hookmetamethod(game,"__index",function(self,property)
+                if not checkcaller() and self:IsA("Humanoid") and self:IsDescendantOf(lp.Character) and hooks[property:lower()] then
+                    return hooks[property:lower()]
+                end
+                return index(self,property)
+            end)
+
+            newindex = hookmetamethod(game,"__newindex",function(self,property,value)
+                if not checkcaller() and self:IsA("Humanoid") and self:IsDescendantOf(lp.Character) and hooks[property:lower()] then
+                    return value
+                end
+                return newindex(self,property,value)
+            end)
+            wait(0.1)
+            getgenv().notify("Success!", "Successfully applied WalkSpeed anti-cheat bypass.")
+        else
+            return getgenv().notify("Failure:", "Your exploit is unsupported, and cannot use WalkSpeed Bypass.", 5)
+        end
+    end,})
+
+    getgenv().WalkSpeedSpooferBypass = Tab1:CreateButton({
+    Name = "[AntiCheats]: Full WalkSpeed Spoofer and Bypass",
+    Callback = function()
+        if not hookmetamethod then
+            return getgenv().notify("Failure:", "Your exploit does not support 'hookmetamethod'!", 5)
+        end
+        if not cloneref then
+            return getgenv().notify("Failure:", "Your exploit does not support 'cloneref'", 5)
+        end
+        wait(0.2)
+        if hookmetamethod and cloneref then
+            getgenv().notify("Waiting:", "Initiating spoof and bypass process...", 5)
+            task.wait(0.3)
+            local WalkSpeedSpoof = getgenv().WalkSpeedSpoof
+            local Disable = WalkSpeedSpoof and WalkSpeedSpoof.Disable
+            if Disable then
+                Disable()
+            end
+
+            local cloneref = cloneref or function(...)
+                return ...
+            end
+
+            local WalkSpeedSpoof = {}
+
+            local Players = cloneref(game:GetService("Players"))
+            if not Players.LocalPlayer then
+                Players:GetPropertyChangedSignal("LocalPlayer"):Wait()
+            end
+            local lp = cloneref(Players.LocalPlayer)
+
+            local split = string.split
+
+            local GetDebugIdHandler = Instance.new("BindableFunction")
+            local TempHumanoid = Instance.new("Humanoid")
+
+            local cachedhumanoids = {}
+
+            local CurrentHumanoid
+            local newindexhook
+            local indexhook
+
+            function GetDebugIdHandler.OnInvoke(obj: Instance): string
+                return obj:GetDebugId()
+            end
+
+            local function GetDebugId(obj: Instance): string
+                return GetDebugIdHandler:Invoke(obj)
+            end
+
+            local function GetWalkSpeed(obj: any): number
+                TempHumanoid.WalkSpeed = obj
+                return TempHumanoid.WalkSpeed
+            end
+
+            function cachedhumanoids:cacheHumanoid(DebugId: string,Humanoid: Humanoid)
+                cachedhumanoids[DebugId] = {
+                    currentindex = indexhook(Humanoid,"WalkSpeed"),
+                    lastnewindex = nil
+                }
+                return self[DebugId]
+            end
+
+            indexhook = hookmetamethod(game,"__index",function(self,index)
+                if not checkcaller() and typeof(self) == "Instance" then
+                    if self:IsA("Humanoid") then
+                        local DebugId = GetDebugId(self)
+                        local cached = cachedhumanoids[DebugId]
+
+                        if self:IsDescendantOf(lp.Character) or cached then
+                            if type(index) == "string" then
+                                local cleanindex = split(index,"\0")[1]
+
+                                if cleanindex == "WalkSpeed" then
+                                    if not cached then
+                                        cached = cachedhumanoids:cacheHumanoid(DebugId,self)
+                                    end
+
+                                    if not (CurrentHumanoid and CurrentHumanoid:IsDescendantOf(game)) then
+                                        CurrentHumanoid = cloneref(self)
+                                    end
+
+                                    return cached.lastnewindex or cached.currentindex
+                                end
+                            end
+                        end
+                    end
+                end
+
+                return indexhook(self,index)
+            end)
+
+            newindexhook = hookmetamethod(game,"__newindex",function(self,index,newindex)
+                if not checkcaller() and typeof(self) == "Instance" then
+                    if self:IsA("Humanoid") then
+                        local DebugId = GetDebugId(self)
+                        local cached = cachedhumanoids[DebugId]
+
+                        if self:IsDescendantOf(lp.Character) or cached then
+                            if type(index) == "string" then
+                                local cleanindex = split(index,"\0")[1]
+
+                                if cleanindex == "WalkSpeed" then
+                                    if not cached then
+                                        cached = cachedhumanoids:cacheHumanoid(DebugId,self)
+                                    end
+
+                                    if not (CurrentHumanoid and CurrentHumanoid:IsDescendantOf(game)) then
+                                        CurrentHumanoid = cloneref(self)
+                                    end
+                                    cached.lastnewindex = GetWalkSpeed(newindex)
+                                    return CurrentHumanoid.WalkSpeed
+                                end
+                            end
+                        end
+                    end
+                end
+                
+                return newindexhook(self,index,newindex)
+            end)
+
+            function WalkSpeedSpoof:Disable()
+                WalkSpeedSpoof:RestoreWalkSpeed()
+                hookmetamethod(game,"__index",indexhook)
+                hookmetamethod(game,"__newindex",newindexhook)
+                GetDebugIdHandler:Destroy()
+                TempHumanoid:Destroy()
+                table.clear(WalkSpeedSpoof)
+                getgenv().WalkSpeedSpoof = nil
+            end
+
+            function WalkSpeedSpoof:GetHumanoid()
+                return CurrentHumanoid or (function()
+                    local char = lp.Character
+                    local Humanoid = char and char:FindFirstChildWhichIsA("Humanoid") or nil
+                    
+                    if Humanoid then
+                        cachedhumanoids:cacheHumanoid(Humanoid:GetDebugId(),Humanoid)
+                        return cloneref(Humanoid)
+                    end
+                end)()
+            end
+
+            function WalkSpeedSpoof:SetWalkSpeed(speed)
+                local Humanoid = WalkSpeedSpoof:GetHumanoid()
+
+                if Humanoid then
+                    local connections = {}
+                    local function AddConnectionsFromSignal(Signal)
+                        for i,v in getconnections(Signal) do
+                            if v.State then
+                                v:Disable()
+                                table.insert(connections,v)
+                            end
+                        end
+                    end
+                    AddConnectionsFromSignal(Humanoid.Changed)
+                    AddConnectionsFromSignal(Humanoid:GetPropertyChangedSignal("WalkSpeed"))
+                    Humanoid.WalkSpeed = speed
+                    for i,v in connections do
+                        v:Enable()
+                    end
+                end
+            end
+
+            function WalkSpeedSpoof:RestoreWalkSpeed()
+                local Humanoid = WalkSpeedSpoof:GetHumanoid()
+                
+                if Humanoid then
+                    local cached = cachedhumanoids[Humanoid:GetDebugId()]
+
+                    if cached then
+                        WalkSpeedSpoof:SetWalkSpeed(cached.lastnewindex or cached.currentindex)
+                    end
+                end
+            end
+
+            getgenv().WalkSpeedSpoof = WalkSpeedSpoof
+            wait(0.2)
+            getgenv().notify("Done!", "Successfully loaded WalkSpeed spoof and bypass.", 5)
+        end
+    end,})
+
+    local function disable_connection(propertyName)
+        local signal = getgenv().Humanoid:GetPropertyChangedSignal(propertyName)
+        for _, conn in ipairs(getconnections(signal)) do
+            conn:Disable()
+        end
+    end
+
+    getgenv().JumpingConnectionsBypass = Tab1:CreateButton({
+    Name = "[AntiCheats]: JumpPower/JumpHeight Bypass (Connections method)",
+    Callback = function()
+        if getconnections then
+            disable_connection("JumpPower")
+            disable_connection("JumpHeight")
+            getgenv().notify("Success:", "Disabled connections for JumpPower/JumpHeight!", 5)
+        else
+            return getgenv().notify("Failure:", "Your executor does not support 'getconnections'!", 5)
+        end
+    end,})
+
+    getgenv().GravityConnectionsBypass = Tab1:CreateButton({
+    Name = "Gravity Bypass (Connections method)",
+    Callback = function()
+        if getconnections then
+            getgenv().notify("Wait:", "Disabling Gravity connections...", 5)
+            task.wait(0.3)
+            local function grav_connections()
+                for _, conn in ipairs(getconnections(getgenv().Workspace:GetPropertyChangedSignal("Gravity"))) do
+                    conn:Disable()
+                end
+            end
+            
+            wait(0.3)
+            grav_connections()
+            wait(0.3)
+            getgenv().notify("Success:", "We have applied Gravity bypass (disabled connection).", 5)
+        end
+    end,})
+
+    getgenv().JumpingHeartbeatConnections = Tab1:CreateButton({
+    Name = "[AntiCheats]: WalkSpeed/JumpPower/JumpHeight Bypass (Heartbeat)",
+    Callback = function()
+        if getrawmetatable and newcclosure then
+            getgenv().notify("Wait:", "Loading Heartbeat bypass...", 5)
+            task.wait(0.3)
+            local spoofedWalkSpeed = 16
+            local spoofedJumpPower = 50
+            local spoofedJumpHeight = 7.2
+
+            local mt = getrawmetatable(game)
+            setreadonly(mt, false)
+
+            local oldIndex = mt.__index
+            mt.__index = newcclosure(function(self, key)
+                if typeof(self) == "Instance" and self:IsA("Humanoid") then
+                    if key == "WalkSpeed" then
+                        return spoofedWalkSpeed
+                    elseif key == "JumpPower" then
+                        return spoofedJumpPower
+                    elseif key == "JumpHeight" then
+                        return spoofedJumpHeight
+                    end
+                end
+                return oldIndex(self, key)
+            end)
+            wait(0.2)
+            getgenv().notify("Success:", "Successfully loaded Heartbeat bypass.", 5)
+        else
+            return getgenv().notify("Failure:", "Your executor does not support 'getrawmetatable' or 'newcclosure'!", 5)
+        end
+    end,})
+
+    getgenv().FlyBypassConnections = Tab1:CreateButton({
+    Name = "[AntiCheats]: Fly Bypass (Connections method)",
+    Callback = function()
+        if getconnections then
+            getgenv().notify("Wait:", "Loading Fly Bypass, disabling connections...", 5)
+            task.wait(0.3)
+            local physicsInstances = {
+                BodyVelocity = true,
+                BodyGyro = true,
+                BodyPosition = true,
+                BodyForce = true,
+                BodyAngularVelocity = true,
+                AlignPosition = true,
+                AlignOrientation = true,
+                VectorForce = true,
+                RocketPropulsion = true
+            }
+
+            local function disable_signal_conns(instance, signal_string)
+                local signal = instance[signal_string]
+                if typeof(signal) == "RBXScriptSignal" then
+                    for _, conn in ipairs(getconnections(signal)) do
+                        conn:Disable()
+                    end
+                end
+            end
+
+            local function patch_char(char)
+                disable_signal_conns(char, "DescendantAdded")
+                disable_signal_conns(getgenv().HumanoidRootPart, "DescendantAdded")
+
+                for _, v in ipairs(char:GetDescendants()) do
+                    disable_signal_conns(v, "ChildAdded")
+                end
+            end
+
+            if getgenv().LocalPlayer.Character then
+                getgenv().notify("Loading...", "Now patching up Character connections...", 5)
+                task.wait(0.5)
+                patch_char(getgenv().Character)
+                wait(0.3)
+                getgenv().notify("Success:", "We have successfully applied Fly Bypass.", 5)
+            else
+                return getgenv().notify("Failure:", "It seems as if your Character hasn't loaded, wait!", 5)
+            end
+        else
+            return getgenv().notify("Failure:", "Your executor does not support 'getconnections'!", 5)
+        end
+    end,})
+
     getgenv().AntiSit_Func = Tab2:CreateToggle({
     Name = "Anti Sit",
     CurrentValue = false,
@@ -4964,6 +5302,10 @@
         MultipleOptions = false,
         Flag = "GetEmoteOption",
         Callback = function(selectedEmote)
+            if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+                return getgenv().notify("Failure:", "You have to be in R15 to use this!", 5)
+            end
+
             local ToWalkWhileEmoting = type(selectedEmote) == "table" and selectedEmote[1] or tostring(selectedEmote)
 
             if getgenv().Character:FindFirstChild("Animate") then
@@ -5003,6 +5345,10 @@
         getgenv().StopWalkingPlaceEmote = Tab2:CreateButton({
         Name = "Stop Walking While Emoting",
         Callback = function()
+            if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+                return getgenv().notify("Failure:", "You have to be in R15 to use this!", 5)
+            end
+
             if getgenv().AnthonyShuffle == true then
                 getgenv().AnthonyShuffle:Set(false)
             else
@@ -5500,60 +5846,64 @@
         warn("User is not on MushYO! 🔊, not putting these here.")
     end
 
-    getgenv().AddBoothWhitelistPlr = Tab7:CreateInput({
-    Name = "Add Player to Booth Whitelist",
-    CurrentValue = "User",
-    PlaceholderText = "User",
-    RemoveTextAfterFocusLost = true,
-    Flag = "BoothWhitelistingAddingUser",
-    Callback = function(getThisPlayer)
-        getgenv().boothWhitelistingPlayer = getgenv().boothWhitelistingPlayer or {}
+    if game.PlaceId == 6884319169 or game.PlaceId == 15546218972 then
+        getgenv().AddBoothWhitelistPlr = Tab7:CreateInput({
+        Name = "Add Player to Booth Whitelist",
+        CurrentValue = "User",
+        PlaceholderText = "User",
+        RemoveTextAfterFocusLost = true,
+        Flag = "BoothWhitelistingAddingUser",
+        Callback = function(getThisPlayer)
+            getgenv().boothWhitelistingPlayer = getgenv().boothWhitelistingPlayer or {}
 
-        local bruhUser = findplr(getThisPlayer)
+            local bruhUser = findplr(getThisPlayer)
 
-        if not bruhUser then
-            return getgenv().notify("Failure", "Player was not found.", 6)
-        end
-
-        wait(0.2)
-        local function addPlayerToBoothTable(player)
-            getgenv().boothWhitelistingPlayer[player.Name] = player
-            wait(0.3)
-            if getgenv().boothWhitelistingPlayer[player.Name] then
-                getgenv().notify("Success!", tostring(player.Name)..", was added to Booth Whitelist!", 5)
+            if not bruhUser then
+                return getgenv().notify("Failure", "Player was not found.", 6)
             end
-        end
-        
-        addPlayerToBoothTable(bruhUser)
-    end,})
 
-    getgenv().RemoveBoothWhitelistPlr = Tab7:CreateInput({
-    Name = "Remove Plr From Booth Whitelist",
-    CurrentValue = "User",
-    PlaceholderText = "User Here",
-    RemoveTextAfterFocusLost = true,
-    Flag = "BoothWhitelistingRemoveUser",
-    Callback = function(RemoveBoothWhitelist)
-        getgenv().boothWhitelistingPlayer = getgenv().boothWhitelistingPlayer or {}
-
-        local dawgUser = findplr(RemoveBoothWhitelist)
-        
-        local function removePlayerFromBoothTable(player)
-            if getgenv().boothWhitelistingPlayer[player.Name] then
-                getgenv().boothWhitelistingPlayer[player.Name] = nil
-                wait(0.2)
-                if getgenv().boothWhitelistingPlayer[player.Name] == nil then
-                    getgenv().notify("Success!", tostring(player.Name)..", was removed from the Booth Whitelist!", 5)
-                else
-                    return getgenv().notify("Failed", tostring(player)..", does not exist!", 5)
+            wait(0.2)
+            local function addPlayerToBoothTable(player)
+                getgenv().boothWhitelistingPlayer[player.Name] = player
+                wait(0.3)
+                if getgenv().boothWhitelistingPlayer[player.Name] then
+                    getgenv().notify("Success!", tostring(player.Name)..", was added to Booth Whitelist!", 5)
                 end
-            else
-                return getgenv().notify("Failed", tostring(player.Name)..", was not found in Booth Whitelist!", 5)
             end
-        end
-        
-        removePlayerFromBoothTable(dawgUser)
-    end,})
+            
+            addPlayerToBoothTable(bruhUser)
+        end,})
+
+        getgenv().RemoveBoothWhitelistPlr = Tab7:CreateInput({
+        Name = "Remove Plr From Booth Whitelist",
+        CurrentValue = "User",
+        PlaceholderText = "User Here",
+        RemoveTextAfterFocusLost = true,
+        Flag = "BoothWhitelistingRemoveUser",
+        Callback = function(RemoveBoothWhitelist)
+            getgenv().boothWhitelistingPlayer = getgenv().boothWhitelistingPlayer or {}
+
+            local dawgUser = findplr(RemoveBoothWhitelist)
+            
+            local function removePlayerFromBoothTable(player)
+                if getgenv().boothWhitelistingPlayer[player.Name] then
+                    getgenv().boothWhitelistingPlayer[player.Name] = nil
+                    wait(0.2)
+                    if getgenv().boothWhitelistingPlayer[player.Name] == nil then
+                        getgenv().notify("Success!", tostring(player.Name)..", was removed from the Booth Whitelist!", 5)
+                    else
+                        return getgenv().notify("Failed", tostring(player)..", does not exist!", 5)
+                    end
+                else
+                    return getgenv().notify("Failed", tostring(player.Name)..", was not found in Booth Whitelist!", 5)
+                end
+            end
+            
+            removePlayerFromBoothTable(dawgUser)
+        end,})
+    else
+        warn("[FALLBACK]: Not in MIC UP or MIC UP 17+, not loading Booth Whitelisting features.")
+    end
 
     getgenv().WhitelistOtherScriptUser = Tab7:CreateInput({
     Name = "Whitelist Script/ZEH User",
@@ -7111,6 +7461,10 @@
     PlaceholderText = "Enter ID",
     RemoveTextAfterFocusLost = true,
     Callback = function(idForEmoting)
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You have to be in R15 to use this!", 5)
+        end
+        
         local number_id = tonumber(idForEmoting) or idForEmoting
 
         local succ, err = pcall(function()
@@ -7147,6 +7501,10 @@
     getgenv().StopEmoteLooping = Tab12:CreateButton({
     Name = "Stop Loop Emoting",
     Callback = function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You have to be in R15 to use this!", 5)
+        end
+
         if getgenv().Character:FindFirstChild("Animate").Disabled or getgenv().Character:FindFirstChild("Animate").Disabled == true then
             getgenv().Character:FindFirstChild("Animate").Disabled = false
         else
@@ -7175,6 +7533,10 @@
     PlaceholderText = "Enter ID",
     RemoveTextAfterFocusLost = true,
     Callback = function(getTheIDForEmote)
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You have to be in R15 to use this!", 5)
+        end
+
         local getNumberID = tonumber(getTheIDForEmote) or getTheIDForEmote
         
         local succ, err = pcall(function()
@@ -7191,6 +7553,10 @@
     getgenv().StopTheEmotes = Tab12:CreateButton({
     Name = "Stop Emoting",
     Callback = function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You have to be in R15 to use this!", 5)
+        end
+
         if getgenv().Humanoid.Sit or getgenv().Humanoid.Sit == true then
             getgenv().Humanoid:ChangeState(3)
             getgenv().Humanoid:ChangeState(3)
@@ -9367,6 +9733,22 @@
         warn("Not on MIC UP, not loading these features.")
     end
 
+    getgenv().AntiChatSpy = Tab4:CreateToggle({
+    Name = "Anti Chat Spy",
+    CurrentValue = false,
+    Flag = "EnableAntiChatSpySpamLogs",
+    Callback = function(enabling_anti_chat_spy)
+        if enabling_anti_chat_spy then
+            getgenv().anti_chat_spy = true
+            while getgenv().anti_chat_spy == true do
+            task.wait()
+                getgenv().Players:Chat(randomString())
+            end
+        else
+            getgenv().anti_chat_spy = false
+        end
+    end,})
+
     if hookfunction and hookmetamethod then
         getgenv().ChatBypassBest = Tab4:CreateButton({
         Name = "Anti Chat Log/Anti Screenshot",
@@ -11279,7 +11661,7 @@
         if getgenv().inf_yield_side then
             return getgenv().notify("Alert!", "Infinite Yield has already been loaded.", 6)
         else
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/EnterpriseExperience/crazyDawg/main/InfYieldOther.lua", true))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/Infinite_Premium.lua", true))()
             getgenv().notify("Heads Up!", "We have now defaulted to a new Infinite Yield script [mine].", 5)
             getgenv().inf_yield_side = true
         end
@@ -11342,6 +11724,30 @@
         Callback = function()
             getgenv().Humanoid.JumpHeight = 7
             getgenv().HeightJumpPowerSliding:Set(7)
+        end,})
+    end
+
+    if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
+        getgenv().HipHeightSliding = Tab2:CreateSlider({
+        Name = "HipHeight (R15), Default: 2",
+        Range = {1, 300},
+        Increment = 1,
+        Suffix = "",
+        CurrentValue = 2,
+        Flag = "HipHeightValue",
+        Callback = function(hipValue)
+            getgenv().Humanoid.HipHeight = hipValue
+        end,})
+    else
+        getgenv().HipHeightSliding = Tab2:CreateSlider({
+        Name = "HipHeight (R6), Default: 0",
+        Range = {0, 300},
+        Increment = 1,
+        Suffix = "",
+        CurrentValue = 0,
+        Flag = "HipHeightValue",
+        Callback = function(hipValue)
+            getgenv().Humanoid.HipHeight = hipValue
         end,})
     end
 
@@ -11958,7 +12364,7 @@
             getgenv().doFreezeToggle = false
         end
     end,})
-    wait()
+    wait(0.1)
     if getgenv().doFreezeToggle == true then
         getgenv().FreezeEmotesToggle:Set(false)
         getgenv().doFreezeToggle = false
@@ -11989,6 +12395,10 @@
     getgenv().StopAllEmotes = Tab12:CreateButton({
     Name = "Stop Playing Emotes",
     Callback = function()
+        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            return getgenv().notify("Failure:", "You have to be in R15 to use this!", 5)
+        end
+
         getgenv().emoting_actions()
     end,})
 
@@ -12064,6 +12474,12 @@
     Flag = "MutingEveryone",
     Callback = function(TheMuteAll)
         if TheMuteAll then
+            local enabled_vc = vc_service:IsVoiceEnabledForUserIdAsync(game.Players.LocalPlayer.UserId)
+
+            if not enabled_vc or enabled_vc == false then
+                return getgenv().notify("Failure:", "Your account does not have VoiceChat!", 5)
+            end
+
             getgenv().LmaoGetMuted = true
             while getgenv().LmaoGetMuted == true do
             wait()
@@ -12085,6 +12501,11 @@
     RemoveTextAfterFocusLost = true,
     Callback = function(getAUser)
         local derUser = findplr(getAUser)
+        local enabled_vc = vc_service:IsVoiceEnabledForUserIdAsync(game.Players.LocalPlayer.UserId)
+
+        if not enabled_vc or enabled_vc == false then
+            return getgenv().notify("Failure:", "Your account does not have VoiceChat!", 5)
+        end
 
         if not derUser then
             return getgenv().notify("Failure!", "User was not found.", 6)
@@ -12131,7 +12552,7 @@
         end
     end,})
 
-    getgenv().ResetButton = Tab15:CreateButton({
+    getgenv().ResetButton = Tab2:CreateButton({
     Name = "Reset",
     Callback = function()
         if getgenv().Character and getgenv().Character:FindFirstChild("Humanoid") then
@@ -12212,7 +12633,7 @@
         warn("Custom UI was not loaded properly.")
     end
 
-    getgenv().ReExecuteGUI = Tab15:CreateButton({
+    getgenv().ReExecuteGUI = Tab1:CreateButton({
     Name = "Re-Execute/Reload Script/GUI",
     Callback = function()
         getgenv().getLoopKick = false
@@ -12230,8 +12651,8 @@
         wait(0.8)
         loadstring(game:HttpGet(('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/total_main.lua')))()
     end,})
-
-    getgenv().DestroyGUIScript = Tab15:CreateButton({
+    wait(0.1)
+    getgenv().DestroyGUIScript = Tab1:CreateButton({
     Name = "Destroy GUI/Script",
     Callback = function()
         getgenv().getLoopKick = false
@@ -12259,6 +12680,11 @@
     RemoveTextAfterFocusLost = true,
     Callback = function(LolPUser)
         local thisUser = findplr(LolPUser)
+        local enabled_vc = vc_service:IsVoiceEnabledForUserIdAsync(game.Players.LocalPlayer.UserId)
+
+        if not enabled_vc or enabled_vc == false then
+            return getgenv().notify("Failure:", "Your account does not have VoiceChat!", 5)
+        end
 
         if not thisUser then
             getgenv().notify("Failure", "Player was not found.", 5)
@@ -13589,7 +14015,7 @@
     Name = "System Broken",
     Callback = function()
         -- I modified this whole shit myself, people have copied my System Broken, and to that I say, go to hell!
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/EnterpriseExperience/SystemBroken/main/source"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/System_Broken.lua"))()
     end,})
     wait()
     local Trip_Settings = {
