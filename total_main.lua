@@ -378,56 +378,58 @@
     getgenv().LocalPlayer.CharacterAdded:Connect(function(newCharacter)
         Dynamic_Character_Updater(newCharacter)
         wait(0.2)
-        if getgenv().changed_color_menu_ui and getgenv().changed_imaging_coloring_ui and getgenv().LocalPlayer:WaitForChild("PlayerGui", 1):FindFirstChild("Menu") then
-            local Menu_GUI = getgenv().LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Menu")
-            local Home_Button = Menu_GUI:FindFirstChild("HomeButton")
-            local Home_Image_Button = Home_Button:FindFirstChild("ImageButton")
-            local Background = Menu_GUI:FindFirstChild("Background")
-            local Scrolling_Frame = Background:FindFirstChild("ScrollingFrame")
-            wait()
-            for _, v in ipairs(Background:GetDescendants()) do
-                if v:IsA("TextLabel") or v:IsA("TextButton") then
-                    v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-                end
-            end
-            wait()
-            for _, v in ipairs(Background:GetDescendants()) do
-                if v:IsA("Frame") then
+        if game.PlaceId == 6884319169 or game.PlaceId == 15546218972 then
+            if getgenv().changed_color_menu_ui and getgenv().changed_imaging_coloring_ui and getgenv().LocalPlayer:WaitForChild("PlayerGui", 1):FindFirstChild("Menu") then
+                local Menu_GUI = getgenv().LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Menu")
+                local Home_Button = Menu_GUI:FindFirstChild("HomeButton")
+                local Home_Image_Button = Home_Button:FindFirstChild("ImageButton")
+                local Background = Menu_GUI:FindFirstChild("Background")
+                local Scrolling_Frame = Background:FindFirstChild("ScrollingFrame")
+                wait()
+                for _, v in ipairs(Background:GetDescendants()) do
                     if v:IsA("TextLabel") or v:IsA("TextButton") then
                         v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                     end
                 end
-            end
-            wait(0.1)
-            for _, v in ipairs(Scrolling_Frame:GetDescendants()) do
-                if v:IsA("TextLabel") then
-                    v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                wait()
+                for _, v in ipairs(Background:GetDescendants()) do
+                    if v:IsA("Frame") then
+                        if v:IsA("TextLabel") or v:IsA("TextButton") then
+                            v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                        end
+                    end
                 end
-            end
-        elseif not getgenv().changed_color_menu_ui and getgenv().LocalPlayer:WaitForChild("PlayerGui", 1):WaitForChild("Menu", 1) then
-            local Menu_GUI = getgenv().LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Menu")
-            local Home_Button = Menu_GUI:FindFirstChild("HomeButton")
-            local Home_Image_Button = Home_Button:FindFirstChild("ImageButton")
-            local Background = Menu_GUI:FindFirstChild("Background")
-            local Scrolling_Frame = Background:FindFirstChild("ScrollingFrame")
-            wait()
-            for _, v in ipairs(Background:GetDescendants()) do
-                if v:IsA("TextLabel") or v:IsA("TextButton") then
-                    v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                wait(0.1)
+                for _, v in ipairs(Scrolling_Frame:GetDescendants()) do
+                    if v:IsA("TextLabel") then
+                        v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                    end
                 end
-            end
-            wait()
-            for _, v in ipairs(Background:GetDescendants()) do
-                if v:IsA("Frame") then
+            elseif not getgenv().changed_color_menu_ui and getgenv().LocalPlayer:WaitForChild("PlayerGui", 1):WaitForChild("Menu", 1) then
+                local Menu_GUI = getgenv().LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Menu")
+                local Home_Button = Menu_GUI:FindFirstChild("HomeButton")
+                local Home_Image_Button = Home_Button:FindFirstChild("ImageButton")
+                local Background = Menu_GUI:FindFirstChild("Background")
+                local Scrolling_Frame = Background:FindFirstChild("ScrollingFrame")
+                wait()
+                for _, v in ipairs(Background:GetDescendants()) do
                     if v:IsA("TextLabel") or v:IsA("TextButton") then
                         v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
                     end
                 end
-            end
-            wait(0.1)
-            for _, v in ipairs(Scrolling_Frame:GetDescendants()) do
-                if v:IsA("TextLabel") then
-                    v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                wait()
+                for _, v in ipairs(Background:GetDescendants()) do
+                    if v:IsA("Frame") then
+                        if v:IsA("TextLabel") or v:IsA("TextButton") then
+                            v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                        end
+                    end
+                end
+                wait(0.1)
+                for _, v in ipairs(Scrolling_Frame:GetDescendants()) do
+                    if v:IsA("TextLabel") then
+                        v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+                    end
                 end
             end
         end
