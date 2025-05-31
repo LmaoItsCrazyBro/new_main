@@ -76,7 +76,13 @@ if game.PlaceId == 83312952548612 then
             if not getgenv().IceBlockCheckEnabled then return end
 
             LocalPlayer.CharacterAdded:Wait()
+            wait(1)
             local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+
+            if not character then
+                LocalPlayer.CharacterAdded:Wait()
+            end
+            task.wait(1)
             if character and IsFullyFrozen() then
                 Rejoin()
             end
