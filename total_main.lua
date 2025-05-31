@@ -11030,15 +11030,22 @@
                     getgenv().LocalPlayer:WaitForChild("Backpack"):FindFirstChild("Teleport Tool"):Destroy()
                 end
                 wait(0.1)
-                local StoredCF = FakeCharacter.HumanoidRootPart.CFrame
-                FakeCharacter.HumanoidRootPart.CFrame = RealCharacter.HumanoidRootPart.CFrame
+                local StoredCF
+                if FakeCharacter and FakeCharacter:FindFirstChild("Humanoid") and FakeCharacter:FindFirstChild("HumanoidRootPart") then
+                    StoredCF = FakeCharacter:FindFirstChild("HumanoidRootPart").CFrame
+                end
+                if FakeCharacter and FakeCharacter:FindFirstChild("Humanoid") and FakeCharacter:FindFirstChild("HumanoidRootPart") then
+                    FakeCharacter:FindFirstChild("HumanoidRootPart").CFrame = RealCharacter:FindFirstChild("HumanoidRootPart").CFrame
+                elseif not FakeCharacter:FindFirstChild("HumanoidRootPart") then
+                    FakeCharacter:WaitForChild("HumanoidRootPart", 1).CFrame = RealCharacter:WaitForChild("HumanoidRootPart", 0.5).CFrame
+                end
                 
-                RealCharacter.HumanoidRootPart.CFrame = StoredCF
+                RealCharacter:WaitForChild("HumanoidRootPart", 0.5).CFrame = StoredCF
                 
-                FakeCharacter.Humanoid:UnequipTools()
+                FakeCharacter:FindFirstChildWhichIsA("Humanoid"):UnequipTools()
                 Player.Character = RealCharacter
-                Workspace_Service.CurrentCamera.CameraSubject = RealCharacter.Humanoid
-                PseudoAnchor = FakeCharacter.HumanoidRootPart
+                getgenv().Camera.CameraSubject = RealCharacter:FindFirstChildWhichIsA("Humanoid")
+                PseudoAnchor = FakeCharacter:WaitForChild("HumanoidRootPart", 0.5)
                 for i, v in pairs(FakeCharacter:GetChildren()) do
                     if v:IsA("LocalScript") then
                         v.Disabled = true
@@ -11049,8 +11056,8 @@
             end
         end
 
-        local User_Input_Service = game:GetService("UserInputService")
-        local Sound_Service = game:GetService("SoundService")
+        local User_Input_Service = getgenv().UserInputService
+        local Sound_Service = getgenv().SoundService
         
         User_Input_Service.InputBegan:Connect(function(key, gamep)
             if gamep then
