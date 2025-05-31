@@ -98,6 +98,17 @@
     end
     print("5")
 
+    function low_level_executor()
+        if executor_Name == "Solara" or string.find(executor_Name, "JJSploit") or executor_Name == "Xeno" then
+            getgenv().notify("Failure:", "This feature isn't supported on this executor.", 5)
+            return false
+        else
+            return true
+        end
+    end
+
+    local low_level_executor_result = low_level_executor()
+
     local function beta_tester(player)
         for _, name in ipairs(all_beta_testers) do
             if player == name then
@@ -5395,6 +5406,14 @@
     Callback = function(michaelJackson)
         michaelJacksonActive = michaelJackson
         if michaelJackson then
+            if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then 
+                michaelJacksonActive = false
+                if getgenv().AnthonyShuffle then
+                    getgenv().AnthonyShuffle:Set(false)
+                end
+                return getgenv().notify("Failure:", "You must be R15 to use this!", 5)
+            end
+
             if getgenv().Humanoid.Sit or getgenv().Humanoid.Sit == true then
                 getgenv().Humanoid:ChangeState(3)
                 getgenv().Humanoid:ChangeState(3)
@@ -5434,6 +5453,12 @@
         Flag = "LoadFlamesOwnerAnims",
         Callback = function(apply_to_respawn_anims)
             if apply_to_respawn_anims then
+                if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R6 then 
+                    if getgenv().Owner_Animations then
+                        getgenv().Owner_Animations:Set(false)
+                    end
+                    return getgenv().notify("Failure:", "You must be R15 to use this!", 5)
+                end
                 getgenv().ownerAnimsEnabled = true
                 local LocalPlayer = getgenv().LocalPlayer
                 
@@ -5622,7 +5647,7 @@
         MultipleOptions = false,
         Flag = "AnimationsDropdownListing",
         Callback = function(anim_play)
-            local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+            local Remotes = getgenv().ReplicatedStorage:FindFirstChild("Remotes")
             local RemoteEvents = Remotes:FindFirstChild("RemoteEvents")
             local animationHandlerEvent = RemoteEvents:FindFirstChild("animationHandlerEvent")
 
@@ -5641,7 +5666,7 @@
         getgenv().RedeemCodes = Tab5:CreateButton({
         Name = "Redeem All Codes",
         Callback = function()
-            local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+            local Remotes = getgenv().ReplicatedStorage:FindFirstChild("Remotes")
             local RemoteFunctions = Remotes or Remotes:FindFirstChild("RemoteFunctions")
             local Codes = RemoteFunctions:FindFirstChild("Codes")
 
@@ -5654,7 +5679,7 @@
         RemoveTextAfterFocusLost = true,
         Callback = function(player_entered)
             local found_this_plr = findplr(player_entered)
-            local Remotes = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+            local Remotes = getgenv().ReplicatedStorage:FindFirstChild("Remotes")
             local RemoteFunctions = Remotes or Remotes:FindFirstChild("RemoteFunctions")
             local OnInviteRequest = RemoteFunctions:FindFirstChild("OnInviteRequest")
 
@@ -5685,6 +5710,10 @@
                 local PlayerScripts = getgenv().LocalPlayer:FindFirstChild("PlayerScripts")
                 local ClientEvent = PlayerScripts:FindFirstChild("ClientEvent")
                 local module = require(ClientEvent:FindFirstChild("DialogueModule"))
+
+                if executor_Name == "Solara" or string.find(executor_Name, "JJSploit") or executor_Name == "Xeno" then
+                    return getgenv().notify("Failure:", "This feature isn't support on this executor.", 5)
+                end
 
                 getgenv().notify("Alert!", "If it gives you an error it means you can't do it.", 6)
 
@@ -11964,7 +11993,7 @@
 
     getgenv().AmbientChooser = Tab9:CreateColorPicker({
     Name = "Ambient Color",
-    Color = Color3.fromRGB(70, 70, 70),
+    Color = getgenv().Lighting.Ambient,
     Flag = "AmbientChoosingColor",
     Callback = function(color_ambient)
         getgenv().Lighting.Ambient = color_ambient
