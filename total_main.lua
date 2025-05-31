@@ -566,7 +566,7 @@
     if getgenv().emotes_bypassed then
         warn("Emotes are already bypassed.")
     else
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/EnterpriseExperience/MicUpSource/refs/heads/main/Emote_Bypass_Script.lua'))()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/Emote_Bypass_Script.lua'))()
         getgenv().emotes_bypassed = true
     end
     wait(0.1)
