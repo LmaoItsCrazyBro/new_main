@@ -414,6 +414,7 @@ TitleBarLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TitleBarLabel.BorderSizePixel = 0
 TitleBarLabel.Size = UDim2.new(1, 0, 0, 30)
 TitleBarLabel.Font = Enum.Font.Unknown
+TitleBarLabel.Text = "             Zacks Modified Broken"
 TitleBarLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
 TitleBarLabel.TextScaled = true
 TitleBarLabel.TextSize = 14.000
@@ -546,6 +547,9 @@ Home_Section.Size = UDim2.new(0, 395, 0, 320)
 Home_Section.CanvasSize = UDim2.new(0, 0, 0, 0)
 Home_Section.ScrollBarThickness = 5
 
+local userId = Players.LocalPlayer.UserId
+local thumbUrl = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. userId .. "&width=420&height=420&format=png"
+task.wait(0.2)
 Profile_Image.Name = "Profile_Image"
 Profile_Image.Parent = Home_Section
 Profile_Image.BackgroundColor3 = Color3.fromRGB(30,30,30)
@@ -553,7 +557,7 @@ Profile_Image.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Profile_Image.BorderSizePixel = 0
 Profile_Image.Position = UDim2.new(0, 25, 0, 25)
 Profile_Image.Size = UDim2.new(0, 100, 0, 100)
-Profile_Image.Image = Players:GetUserThumbnailAsync(plr.UserId,Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size420x420)
+Profile_Image.Image = thumbUrl
 
 Welcome_Label.Name = "Welcome_Label"
 Welcome_Label.Parent = Home_Section
@@ -1226,10 +1230,6 @@ SneakyAnim_Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 SneakyAnim_Button.TextScaled = true
 SneakyAnim_Button.TextSize = 14.000
 SneakyAnim_Button.TextWrapped = true
-
-if game.Players.LocalPlayer.Name == "TheMxltyzlol" then
-    while true do end
-end
 
 ToyAnim_Button.Name = "ToyAnim_Button"
 ToyAnim_Button.Parent = Animations_Section
