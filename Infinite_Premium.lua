@@ -17,7 +17,7 @@ if not game:IsLoaded() then
    notLoaded:Destroy()
 end
 
-currentVersion = "7.2.8"
+currentVersion = "7.3.3"
 
 Holder = Instance.new("Frame")
 getgenv().Holder_Frame = Holder
@@ -181,6 +181,21 @@ else
   Main.Name = randomString()
   Main.Parent = COREGUI
   PARENT = Main
+end
+wait(0.3)
+getgenv().Destroy_InfYield_Script()
+    if Main then
+        Main:Destroy()
+    end
+    if getgenv().Holder_Frame then
+        getgenv().Holder_Frame = nil
+    end
+    if getgenv().GET_LOADED_IY then
+        getgenv().GET_LOADED_IY = false
+    end
+    if GET_LOADED_IY then
+        GET_LOADED_IY = false
+    end
 end
 
 shade1 = {}
