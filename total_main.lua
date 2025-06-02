@@ -10522,6 +10522,45 @@
         end
     end
 
+    getgenv().InfYield_ESP = Tab19:CreateToggle({
+    Name = "Infinite Yield Player ESP",
+    CurrentValue = false,
+    Flag = "MainESP_InfYield",
+    Callback = function(esp_inf_yield)
+        if esp_inf_yield then
+            if not getgenv().Holder_Frame then
+                loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/Infinite_Premium.lua'))()
+                wait(0.5)
+                if getgenv().execCmd then
+                    getgenv().execCmd("esp")
+                    task.wait(.5)
+                    getgenv().notify("Success:", "Infinite Yield ESP has been loaded successfully!", 5)
+                else
+                    getgenv().InfYield_ESP:Set(false)
+                    return getgenv().notify("Failure:", "Load Infinite Premium to load this ESP!", 5)
+                end
+            elseif getgenv().Holder_Frame then
+                if getgenv().execCmd then
+                    getgenv().execCmd("esp")
+                    task.wait(.5)
+                    getgenv().notify("Success:", "Infinite Yield ESP has been loaded successfully!", 5)
+                end
+            end
+        else
+            if getgenv().Holder_Frame then
+                if getgenv().execCmd then
+                    getgenv().execCmd("unesp")
+                    task.wait(0.3)
+                    getgenv().notify("Success:", "Successfully unloaded Infinite Yield ESP", 5)
+                else
+                    return getgenv().notify("Failure:", "Infinite Premium is needed to run this ESP!", 5)
+                end
+            else
+                return getgenv().notify("Heads Up:", "Could not find Infinite Yield, ESP not on.", 5)
+            end
+        end
+    end,})
+
     wait(0.2)
     getgenv().HighlightESP_Drawing = Tab19:CreateToggle({
     Name = "Highlight",
@@ -11694,7 +11733,7 @@
     end
 
     getgenv().InfYield = Tab5:CreateButton({
-    Name = "Infinite Yield",
+    Name = "Infinite Premium (Infinite Yield Upgraded).",
     Callback = function()
         if getgenv().inf_yield_side then
             return getgenv().notify("Alert!", "Infinite Yield has already been loaded.", 6)
