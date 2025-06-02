@@ -183,7 +183,7 @@ else
   PARENT = Main
 end
 wait(0.3)
-getgenv().Destroy_InfYield_Script()
+getgenv().Destroy_InfYield_Script = function()
     if Main then
         Main:Destroy()
     end
