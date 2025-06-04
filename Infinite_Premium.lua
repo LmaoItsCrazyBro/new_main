@@ -3431,6 +3431,14 @@ ColorsButton.MouseButton1Click:Connect(function()
      picker.Name = randomString()
      picker.Parent = PARENT
 
+     if not picker then
+        notify("Error:", "Color Picker seems to have failed to load, we will work on it.")
+        task.wait(0.5)
+        getgenv().Destroy_InfYield_Script()
+        wait(0.5)
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/Infinite_Premium.lua'))()
+     end
+
      local ColorPicker do
         ColorPicker = {}
 
