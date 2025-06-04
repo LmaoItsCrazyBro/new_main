@@ -371,79 +371,27 @@
     getgenv().Head = getgenv().Character:WaitForChild("Head") or getgenv().Character:FindFirstChild("Head")
     wait(0.2)
     print("17")
+
     wait(0.2)
-    
-    wait(0.3)
-    -- We can utilize this to teleport back to the same CFrame, as per when the script started, since we need to reset the Character when the script is fully loaded to fix other potential issues.
-    getgenv().StartedScriptCFrame = getgenv().Character:FindFirstChild("HumanoidRootPart").Position
 
     -- Initialize Character Updater, fixing any issues with Humanoid, HumanoidRootPart, or even if the Character dies and respawns, essentially making sure the Character is always defined correctly.
     local function Dynamic_Character_Updater(character)
         getgenv().Character = character
-        getgenv().HumanoidRootPart = character:WaitForChild("HumanoidRootPart") or character:FindFirstChild("HumanoidRootPart")
-        getgenv().Humanoid = character:WaitForChild("Humanoid") or character:FindFirstChildWhichIsA("Humanoid")
+
+        local hrp = character:FindFirstChild("HumanoidRootPart")
+        getgenv().HumanoidRootPart = (hrp and hrp:IsA("BasePart")) and hrp or nil
+
+        local hum = character:FindFirstChildOfClass("Humanoid")
+        getgenv().Humanoid = (hum and hum:IsA("Humanoid")) and hum or nil
+
+        local head = character:FindFirstChild("Head")
+        getgenv().Head = (head and head:IsA("BasePart")) and head or nil
     end
 
     -- Update Character Model(s) components, since we need to make sure the live updates are saved correctly (Especially when the Character components are updated as well).
     Dynamic_Character_Updater(getgenv().Character)
     getgenv().LocalPlayer.CharacterAdded:Connect(function(newCharacter)
         Dynamic_Character_Updater(newCharacter)
-        wait(0.2)
-        if game.PlaceId == 6884319169 or game.PlaceId == 15546218972 then
-            if getgenv().changed_color_menu_ui and getgenv().changed_imaging_coloring_ui and getgenv().LocalPlayer:WaitForChild("PlayerGui", 1):FindFirstChild("Menu") then
-                local Menu_GUI = getgenv().LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Menu")
-                local Home_Button = Menu_GUI:FindFirstChild("HomeButton")
-                local Home_Image_Button = Home_Button:FindFirstChild("ImageButton")
-                local Background = Menu_GUI:FindFirstChild("Background")
-                local Scrolling_Frame = Background:FindFirstChild("ScrollingFrame")
-                wait()
-                for _, v in ipairs(Background:GetDescendants()) do
-                    if v:IsA("TextLabel") or v:IsA("TextButton") then
-                        v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-                    end
-                end
-                wait()
-                for _, v in ipairs(Background:GetDescendants()) do
-                    if v:IsA("Frame") then
-                        if v:IsA("TextLabel") or v:IsA("TextButton") then
-                            v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-                        end
-                    end
-                end
-                wait(0.1)
-                for _, v in ipairs(Scrolling_Frame:GetDescendants()) do
-                    if v:IsA("TextLabel") then
-                        v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-                    end
-                end
-            elseif not getgenv().changed_color_menu_ui and getgenv().LocalPlayer:WaitForChild("PlayerGui", 1):WaitForChild("Menu", 1) then
-                local Menu_GUI = getgenv().LocalPlayer:FindFirstChild("PlayerGui"):FindFirstChild("Menu")
-                local Home_Button = Menu_GUI:FindFirstChild("HomeButton")
-                local Home_Image_Button = Home_Button:FindFirstChild("ImageButton")
-                local Background = Menu_GUI:FindFirstChild("Background")
-                local Scrolling_Frame = Background:FindFirstChild("ScrollingFrame")
-                wait()
-                for _, v in ipairs(Background:GetDescendants()) do
-                    if v:IsA("TextLabel") or v:IsA("TextButton") then
-                        v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-                    end
-                end
-                wait()
-                for _, v in ipairs(Background:GetDescendants()) do
-                    if v:IsA("Frame") then
-                        if v:IsA("TextLabel") or v:IsA("TextButton") then
-                            v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-                        end
-                    end
-                end
-                wait(0.1)
-                for _, v in ipairs(Scrolling_Frame:GetDescendants()) do
-                    if v:IsA("TextLabel") then
-                        v.FontFace = Font.new("rbxasset://fonts/families/GothamSSm.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-                    end
-                end
-            end
-        end
     end)
 
     getgenv().check_marketplace_has_gamepass = function(userid, GamePassID)
@@ -651,7 +599,7 @@
     wait(1.7)
     RBXGeneral:DisplaySystemMessage("Flames Hub, with version:")
     wait(1.8)
-    RBXGeneral:DisplaySystemMessage("V-5.3.9")
+    RBXGeneral:DisplaySystemMessage("V-5.4.1")
     wait(1.5)
     RBXGeneral:DisplaySystemMessage("Welcome, "..tostring(game.Players.LocalPlayer).." | We hope you enjoy scripting.")
     wait(0.5)
@@ -926,7 +874,7 @@
     wait(0.2)
     if executor_Name == "Solara" or executor_Name == "Sonar" then
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.3.9 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.4.1 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(getgenv().LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -952,7 +900,7 @@
         })
     else
         Window = Rayfield:CreateWindow({
-            Name = "⭐ Flames Hub ⭐ | V5.3.9 | "..tostring(executor_Name),
+            Name = "⭐ Flames Hub ⭐ | V5.4.1 | "..tostring(executor_Name),
             LoadingTitle = "Enjoy, "..tostring(game.Players.LocalPlayer),
             LoadingSubtitle = "Flames Hub | Yo.",
             ConfigurationSaving = {
@@ -3505,10 +3453,10 @@
     Callback = function(theSitDownAntiToggle)
         if theSitDownAntiToggle then
             getgenv().disabled_sit_function = true
-            getgenv().Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+            getgenv().Character:FindFirstChildWhichIsA("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.Seated, false)
         else
             getgenv().disabled_sit_function = false
-            getgenv().Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+            getgenv().Character:FindFirstChildWhichIsA("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.Seated, true)
         end
     end,})
     wait()
