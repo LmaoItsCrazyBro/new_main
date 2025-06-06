@@ -1,3 +1,6 @@
+-- Won't work on every game obviously.
+-- but i need to modify it to work with all games with HD admin in it.
+-- it's set to really only work for Troll Is A Pinning Tower 2, cuz of the naming, ill fix it later.
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local playerName = LocalPlayer.Name
