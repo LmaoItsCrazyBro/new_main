@@ -9909,7 +9909,7 @@
             local PostMessage = require(ChatMain).MessagePosted
 
             if not PostMessage then
-                getgenv().notify("Failure:", "PostMessage could not be located, loading Anti Screenshot.", 5)
+                getgenv().notify("Failure:", "PostMessage could not be located, loading Anti Screenshot...", 5)
                 if setfflag then
                     pcall(function()
                         setfflag("AbuseReportScreenshot", "False")
@@ -10035,8 +10035,6 @@
                     end
                 end)
             end)
-
-            task.delay(1, function() WarningUI:Destroy() end)
 
             for _, x in next, OldCoreTypeSettings do
                 if not x then
