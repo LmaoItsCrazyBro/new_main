@@ -7,3 +7,8 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_m
 ```lua
 loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/Infinite_Premium.lua'))()
 ```
+
+**System Broken**
+```lua
+loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/System_Broken.lua'))()
+```
