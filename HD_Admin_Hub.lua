@@ -164,11 +164,6 @@ wait(0.2)
 
 local function Dynamic_Character_Updater(character)
     warn("[HD_ADMIN_HUB]: Waiting for Character to fully load...")
-    getgenv().LocalPlayer.CharacterAdded:Wait()
-    repeat wait() until getgenv().LocalPlayer.Character and getgenv().LocalPlayer.Character:FindFirstChild("Humanoid")
-    while not getgenv().LocalPlayer.Character do
-        task.wait()
-    end
     task.wait(0.2)
     getgenv().Character = character or getgenv().LocalPlayer.Character
     task.wait(0.3)
@@ -196,28 +191,61 @@ getgenv().LocalPlayer.CharacterAdded:Connect(function(newCharacter)
     getgenv().Head = newCharacter:FindFirstChild("Head") or newCharacter:WaitForChild("Head", 5)
 end)
 task.wait(0.2)
-local Rayfield = nil
-local MAX_ATTEMPTS = 10
-local WAIT_BETWEEN_ATTEMPTS = 1
+local Rayfield
+local HttpService = cloneref and cloneref(game:GetService("HttpService")) or game:GetService("HttpService")
+local Players = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
+local RunService = cloneref and cloneref(game:GetService("RunService")) or game:GetService("RunService")
 
-for attempt = 1, MAX_ATTEMPTS do
-    local success, result = pcall(function()
-        return loadstring(game:HttpGet("https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/Main_UI.lua"))()
-    end)
+local function LocalPlayer_loaded()
+    local player = Players.LocalPlayer
+    if not player then
+        repeat task.wait() until Players.LocalPlayer
+        player = Players.LocalPlayer
+    end
 
-    if success and result then
-        Rayfield = result
-        print("Rayfield loaded successfully on attempt:", attempt)
-        break
-    else
-        warn("Rayfield load failed on attempt:", attempt, "Error:", result)
-        task.wait(WAIT_BETWEEN_ATTEMPTS)
+    if not player.Character or not player.Character:FindFirstChild("Humanoid") then
+        player.CharacterAdded:Wait()
+        repeat task.wait() until player.Character:FindFirstChild("Humanoid")
     end
 end
 
-if not Rayfield then
-    warn("[CRITICAL_ERROR]: Failed to load Rayfield after multiple attempts.")
+local function render_safe()
+    RunService.RenderStepped:Wait()
+    task.wait(0.2)
 end
+
+local function load_rayfield()
+    local attempts = 0
+    local maxAttempts = 10
+    local success = false
+    local result
+
+    repeat
+        attempts += 1
+        success, result = pcall(function()
+            return loadstring(game:HttpGet("https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/Main_UI.lua"))()
+        end)
+
+        if not success or not result then
+            warn("[Rayfield] Load failed (attempt " .. attempts .. "):", result)
+            task.wait(1)
+        end
+    until success and result or attempts >= maxAttempts
+
+    return result
+end
+
+task.spawn(function()
+    LocalPlayer_loaded()
+    render_safe()
+
+    Rayfield = load_rayfield()
+    if Rayfield then
+        print("[Rayfield]: UI successfully loaded.")
+    else
+        warn("[CRITICAL_ERROR] Rayfield failed to load after multiple attempts.")
+    end
+end)
 wait(0.5)
 getgenv().notify = function(title, content, duration)
     Rayfield:Notify({
@@ -303,12 +331,13 @@ local Modules_Folder
 local Messages_Module
 local Signals
 local ChangeSetting_RF
+local ReplicatedStorage = getgenv().ReplicatedStorage
 
-if getgenv().ReplicatedStorage:FindFirstChild("HDAdminClient") or getgenv().ReplicatedStorage:FindFirstChild("HDAdminHDClient") then
-    HDAdmin_Client_Folder = getgenv().ReplicatedStorage:FindFirstChild("HDAdminHDClient") or getgenv().ReplicatedStorage:FindFirstChild("HDAdminClient")
+HDAdmin_Client_Folder = ReplicatedStorage:FindFirstChild("HDAdminClient") or ReplicatedStorage:FindFirstChild("HDAdminHDClient")
+if HDAdmin_Client_Folder then
     Modules_Folder = HDAdmin_Client_Folder:WaitForChild("Modules")
-    Signals = HD_Admin_Client_Folder:FindFirstChild("Signals")
-    ChangeSetting_RF = Signals:FindFirstChild("ChangeSetting")
+    Signals = HDAdmin_Client_Folder:FindFirstChild("Signals")
+    ChangeSetting_RF = Signals and Signals:FindFirstChild("ChangeSetting")
     Messages_Module = Modules_Folder:FindFirstChild("Messages")
 
     if not (executor_Name == "Solara" or executor_Name == "Xeno" or string.find(executor_Name, "JJSploit")) then
@@ -321,7 +350,9 @@ if getgenv().ReplicatedStorage:FindFirstChild("HDAdminClient") or getgenv().Repl
             DisplayFrom = true
         }
 
-        require(Messages_Module):GlobalAnnouncement(Content)
+        if Messages_Module then
+            require(Messages_Module):GlobalAnnouncement(Content)
+        end
     end
 end
 task.wait(0.2)
@@ -406,9 +437,9 @@ Callback = function()
     }
 
     if Signals and ChangeSetting_RF then
-        ChangeSetting_RF:InvokeServer(Jail_Invoke_Data)
+        ChangeSetting_RF:InvokeServer(CmdBar_Invoke_Data)
         wait(0.3)
-        post_message_chat("/e ;cmdbar me")
+        post_message_chat("/e ;cmdbar")
     elseif not ChangeSetting_RF and Signals then
         return getgenv().notify("Heads Up:", "Please change your prefix in HD admin to: ;", 5)
     else
