@@ -18,5 +18,5 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_m
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixeluted/adoniscries/main/Source.lua",true))()
 ```
 
-**Chat bypass adding soon: (WORKING, NO LANGUAGE CHANGE)**
+**Chat bypass adding soon: (WORKING, NO LANGUAGE CHANGE):**
 https://lingojam.com/roblox-bypasser-op
