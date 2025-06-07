@@ -13,7 +13,7 @@ loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_m
 loadstring(game:HttpGet('https://raw.githubusercontent.com/LmaoItsCrazyBro/new_main/refs/heads/main/System_Broken.lua'))()
 ```
 
-**Adonis AntiCheat Bypass*
+**Adonis AntiCheat Bypass**
 ```lua
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Pixeluted/adoniscries/main/Source.lua",true))()
 ```
