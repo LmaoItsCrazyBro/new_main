@@ -1330,8 +1330,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 			Elements.UIPageLayout.Animated = true
 		end
 
-		
-		
 		task.wait(0.1)
 		if FirstTab then
 			TabButton.BackgroundColor3 = SelectedTheme.TabBackground
@@ -1354,7 +1352,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 		TabButton.Interact.MouseButton1Click:Connect(function()
 			if Minimised then return end
-			TweenService:Create(TabButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0}):Play()
 			TweenService:Create(TabButton.UIStroke, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
 			TweenService:Create(TabButton.Title, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 			TweenService:Create(TabButton.Image, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
@@ -2819,10 +2816,6 @@ for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 	if TopbarButton.ClassName == "ImageButton" then
 		TopbarButton.MouseEnter:Connect(function()
 			TweenService:Create(TopbarButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
-		end)
-
-		TopbarButton.MouseLeave:Connect(function()
-			TweenService:Create(TopbarButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.8}):Play()
 		end)
 	end
 end
