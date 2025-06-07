@@ -371,7 +371,6 @@
     getgenv().Head = getgenv().Character:WaitForChild("Head") or getgenv().Character:FindFirstChild("Head")
     wait(0.2)
     print("17")
-
     wait(0.2)
 
     -- Initialize Character Updater, fixing any issues with Humanoid, HumanoidRootPart, or even if the Character dies and respawns, essentially making sure the Character is always defined correctly.
@@ -387,6 +386,10 @@
         local head = character:FindFirstChild("Head")
         getgenv().Head = (head and head:IsA("BasePart")) and head or nil
     end
+
+    local Humanoid = getgenv().Character:FindFirstChildWhichIsA("Humanoid") or getgenv().Character:WaitForChild("Humanoid")
+    local HumanoidRootPart = getgenv().Character:FindFirstChild("HumanoidRootPart") or getgenv().Character:WaitForChild("HumanoidRootPart")
+    local Head = getgenv().Character:FindFirstChild("Head") or getgenv().Character:WaitForChild("Head")
 
     -- Update Character Model(s) components, since we need to make sure the live updates are saved correctly (Especially when the Character components are updated as well).
     Dynamic_Character_Updater(getgenv().Character)
@@ -1842,7 +1845,7 @@
     end,})
 
     function check_r15()
-        if getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
+        if getgenv().Character:FindFirstChildWhichIsA("Humanoid").RigType == Enum.HumanoidRigType.R15 then
             return true
         else
             return getgenv().notify("Failure:", "You do not seem to be R15.", 5)
@@ -1861,9 +1864,9 @@
     Callback = function(emote_picked)
         local emoteToPlay = type(emote_picked) == "table" and emote_picked[1] or tostring(emote_picked)
 
-        if getgenv().Character:FindFirstChildWhichIsA("Humanoid") and getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
+        if getgenv().Character:FindFirstChildWhichIsA("Humanoid") and is_r15 == true then
             getgenv().Humanoid:PlayEmote(emoteToPlay)
-        elseif not getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
+        elseif not getgenv().Character:FindFirstChildWhichIsA("Humanoid").RigType == Enum.HumanoidRigType.R15 then
             return getgenv().notify("Failure:", "You are not R15!", 5)
         end
     end,})
@@ -3453,10 +3456,10 @@
     Callback = function(theSitDownAntiToggle)
         if theSitDownAntiToggle then
             getgenv().disabled_sit_function = true
-            getgenv().Character:FindFirstChildWhichIsA("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+            Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
         else
             getgenv().disabled_sit_function = false
-            getgenv().Character:FindFirstChildWhichIsA("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+            Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
         end
     end,})
     wait()
@@ -8242,7 +8245,7 @@
     Callback = function(noclip_toggle)
         function reset_collide(reset_bool)
             if reset_bool == true and getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
-                getgenv().Character:FindFirstChild("HumanoidRootPart").CanCollide = true
+                HumanoidRootPart.CanCollide = true
                 getgenv().Character:FindFirstChild("LowerTorso").CanCollide = true
                 getgenv().Character:FindFirstChild("UpperTorso").CanCollide = true
             elseif reset_bool == false and getgenv().Humanoid.RigType == Enum.HumanoidRigType.R15 then
