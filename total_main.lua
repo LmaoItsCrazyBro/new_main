@@ -3335,6 +3335,29 @@
         end
     end
 
+    getgenv().Spoof_Zoom_Script = Tab5:CreateToggle({
+    Name = "Spoof Zoom (maximizes zoom distance loop)",
+    CurrentValue = false,
+    Flag = "SpoofingZoomLoop",
+    Callback = function(zoom_spoofed)
+        local Players = cloneref and cloneref(game:GetService("Players")) or game:GetService("Players")
+        local Old_Min_Zoom_Distance = Players.LocalPlayer.CameraMinZoomDistance
+        local Old_Max_Zoom_Distance = Players.LocalPlayer.CameraMaxZoomDistance
+        wait(0.1)
+        if zoom_spoofed then
+           getgenv().inf_zoom_always = true
+            while getgenv().inf_zoom_always == true do
+            task.wait()
+                getgenv().LocalPlayer.CameraMinZoomDistance = 0
+                getgenv().LocalPlayer.CameraMaxZoomDistance = 1000000
+            end
+        else
+            getgenv().inf_zoom_always = false
+            getgenv().LocalPlayer.CameraMinZoomDistance = Old_Min_Zoom_Distance
+            getgenv().LocalPlayer.CameraMaxZoomDistance = Old_Max_Zoom_Distance
+        end
+    end,})
+
     getgenv().JumpingConnectionsBypass = Tab1:CreateButton({
     Name = "[AntiCheats]: JumpPower/JumpHeight Bypass (Connections method)",
     Callback = function()
