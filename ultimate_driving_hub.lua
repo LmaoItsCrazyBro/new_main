@@ -486,10 +486,7 @@ CurrentValue = false,
 Flag = "RainbowFECarScript",
 Callback = function(rainbow_car)
     if rainbow_car then
-        getgenv().rainbow_vehicle = true
-        while getgenv().rainbow_vehicle == true do
-        task.wait()
-            local colors = {
+                    local colors = {
                 Black = {
                     ColorPrimary = Color3.new(0, 0, 0),
                     ColorSecondary = Color3.new(0, 0, 0),
@@ -540,9 +537,11 @@ Callback = function(rainbow_car)
                 }
             }
 
+        getgenv().rainbow_vehicle = true
+        while getgenv().rainbow_vehicle == true do
+        task.wait()
             for name, preset in pairs(colors) do
                 Vehicle_Change_RF:InvokeServer(Vehicle.Name, preset)
-                task.wait(.2)
             end
         end
     else
@@ -583,7 +582,6 @@ Callback = function(rainbow_underglow)
                 }
 
                 Vehicle_Change_RF:InvokeServer(unpack(args))
-                task.wait(.2)
             end
         end
     else
@@ -622,7 +620,6 @@ Callback = function(Rainbow_Tires_Main)
                     }
                 }
                 Vehicle_Change_RF:InvokeServer(unpack(args))
-                task.wait(.2)
             end
         end
     else
